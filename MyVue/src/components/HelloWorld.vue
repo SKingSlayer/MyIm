@@ -1,97 +1,62 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
+
+<div id = "ap">
+  <form  id = "a">
+    <img src="/img/P.png" width="72" height="72">
+    <h2 class="=form-signin0-heading">Please sign in</h2>
+    <input class="form-control" v-model="userName" type="text" placeholder="用户名" ><br>
+    <input class="form-control" v-model="userPassword" type="password" placeholder="密码"><br>
+    <button class="btn btn-lg btn-primary btn-block" type="button" @click="myFunction" >Sign in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="button" @click="register" >Go to regist</button>
+  </form>
+</div>
+
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  name: 'HelloWorld',
-  data () {
+  name: 'ap',
+  data: function() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      userName: '',
+      userPassword: ''
+    };
+  },
+
+  methods:{
+    myFunction:function () {
+      console.log("传输失败")
+      axios.post('http://localhost:8081/user/selectUserName', {
+        userName: this.userName,
+        userPassword: this.userPassword,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}   //跨域
+      }).then(function (dat) {
+        alert(dat.data)
+        if (dat.data == '0')
+          alert("用户不存在")
+        else if (dat.data == '1')
+          alert("登录失败，账号或密码错误")
+        else if (dat.data == '2')
+        {
+          window.location.href = '/user/successLogin'
+        }
+          //当前窗体跳转
+
+        //新窗体跳转
+        // window.open('/user/successLogin')
+      }).catch(function () {
+        console.log("传输失败")
+      })
+    },
+    register:function () {
+      console.log("传输失败")
+      alert("用户不存在")
+      window.location.href = "user/register"
     }
   }
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
