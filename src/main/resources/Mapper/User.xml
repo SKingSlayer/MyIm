@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace绑定一个dao接口-->
+<mapper namespace="com.example.demo.MyData.Dao.UserDao">
+    <select id="getUserList" resultType="com.example.demo.MyData.Entity.User">
+        select * from  myuser
+    </select>
+    <insert id="insertUser" parameterType="com.example.demo.MyData.Entity.User">
+        INSERT INTO myuser(username,password) VALUES ('aaa','123')
+    </insert>
+</mapper>
