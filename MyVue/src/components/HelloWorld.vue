@@ -12,6 +12,7 @@
 </div>
 
 </template>
+
 <script>
 import axios from 'axios'
 export default {
@@ -25,26 +26,25 @@ export default {
 
   methods:{
     myFunction:function () {
-      console.log("传输失败")
       axios.post('http://localhost:8081/user/selectUserName', {
         userName: this.userName,
         userPassword: this.userPassword,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}   //跨域
       }).then(function (dat) {
-        alert(dat.data)
         if (dat.data == '0')
           alert("用户不存在")
         else if (dat.data == '1')
           alert("登录失败，账号或密码错误")
         else if (dat.data == '2')
         {
-          window.location.href = '/user/successLogin'
+          alert("Success")
+          this.$router.replace('/Success')
         }
           //当前窗体跳转
 
         //新窗体跳转
         // window.open('/user/successLogin')
-      }).catch(function () {
+      }.bind(this)).catch(function () {
         console.log("传输失败")
       })
     },
@@ -73,5 +73,8 @@ li {
 }
 a {
   color: #42b983;
+}
+#ap{
+  margin-top: 150px;
 }
 </style>
