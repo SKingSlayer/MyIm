@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/user")
 public class  TestController {
+    @RequestMapping(value="/hongbao")
+    public void getMoney(){
+
+    }
 
     @RequestMapping(value = "/successLogin", method=RequestMethod.GET)
     public String successLogin() { return "successLogin"; }
