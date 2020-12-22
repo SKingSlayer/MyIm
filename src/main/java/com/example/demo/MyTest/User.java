@@ -1,8 +1,8 @@
-package com.example.demo.RocketMq;
+package com.example.demo.MyTest;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+class User implements Serializable {
     private String loginName;
     private String pwd;
 

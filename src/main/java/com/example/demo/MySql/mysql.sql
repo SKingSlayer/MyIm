@@ -17,3 +17,9 @@ create  table  if not exists CharHistory
     `history` varchar(1000) not null,
     primary key (`id`)
 )ENGINE=myisam  DEFAULT CHARSET=utf8;
+create  table  if not exists Rm
+(
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `rmNum` int(32),
+    primary key (`id`)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;

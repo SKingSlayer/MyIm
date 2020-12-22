@@ -16,13 +16,20 @@ public class SpringWebSocketHandlerInterceptor extends HttpSessionHandshakeInter
         System.out.println("Before Handshake");
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-            HttpSession session = servletRequest.getServletRequest().getSession(false);
-            if (session != null) {
+
+
                 //使用userName区分WebSocketHandler，以便定向发送消息
-                String userName = (String) session.getAttribute("SESSION_USERNAME");  //一般直接保存user实体
-                if (userName!=null) {
-                    attributes.put("WEBSOCKET_USERID",userName);
-                }
+
+               String rmId = (String) servletRequest.getServletRequest().getParameter("RMID");  //一般直接保存user实体
+               String userID=(String) servletRequest.getServletRequest().getParameter("USERID");
+                System.out.println(rmId);
+            System.out.println("UserID"+userID);
+                if (rmId !=null) {
+                    attributes.put("RMID",rmId);
+
+                  }
+            if (userID !=null) {
+                attributes.put("USERID",userID);
 
             }
         }

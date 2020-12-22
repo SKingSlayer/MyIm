@@ -19,7 +19,6 @@ public class SpringWebSocketConfig extends WebMvcConfigurerAdapter implements We
 
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 
-        //springwebsocket 4.1.5版本前默认支持跨域访问，之后的版本默认不支持跨域，需要设置.setAllowedOrigins("*")
         registry.addHandler(webSocketHandler(),"/websocket/socketServer.do").setAllowedOrigins("*")
                 .addInterceptors(new SpringWebSocketHandlerInterceptor());
 

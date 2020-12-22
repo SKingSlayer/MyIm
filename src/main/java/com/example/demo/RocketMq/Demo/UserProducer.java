@@ -1,12 +1,10 @@
-package com.example.demo.RocketMq;
+package com.example.demo.RocketMq.Demo;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 

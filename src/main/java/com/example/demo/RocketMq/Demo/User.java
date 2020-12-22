@@ -1,4 +1,4 @@
-package com.example.demo.RocketMq;
+package com.example.demo.RocketMq.Demo;
 
 import java.io.Serializable;
 

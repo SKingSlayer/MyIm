@@ -1,8 +1,13 @@
 package com.example.demo.MyHandler;
 
 
+import com.example.demo.MyData.JsonObject.RmTmp;
+import com.example.demo.RocketMq.Producer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.handler.codec.redis.RedisMessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,9 +18,11 @@ import java.util.Map;
 
 public class SpringWebSocketHandler extends TextWebSocketHandler {
 
+    @Autowired
+    Producer producer;
     private static Logger logger = LoggerFactory.getLogger(SpringWebSocketHandler.class);
 
-    private static final Map<String, WebSocketSession> users;  //Map来存储WebSocketSession，key用USER_ID 即在线用户列表
+    public static final Map<String, WebSocketSession> users;  //Map来存储WebSocketSession，key用USER_ID 即在线用户列表
 
     //用户标识
     private static final String USER_ID = "WEBSOCKET_USERID";   //对应监听器从的key
@@ -32,11 +39,21 @@ public class SpringWebSocketHandler extends TextWebSocketHandler {
      */
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-        System.out.println("成功建立websocket连接!");
-        String userId = (String) session.getAttributes().get(USER_ID);
-        users.put(userId,session);
-        System.out.println("当前线上用户数量:"+users.size());
 
+        System.out.println("成功建立websocket连接!");
+        String sessionId = session.getId();
+        users.put(sessionId,session);
+        String rmid=(String) session.getAttributes().get("RMID") ;
+        String userId=(String) session.getAttributes().get("USERID");
+        RmTmp tmp=new RmTmp();
+        tmp.setRmId(rmid);
+        tmp.setSessionId(sessionId);
+        tmp.setUserId(userId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(tmp);
+        producer.sendMessage(json);
+//        System.out.println("当前线上用户数量:"+users.size());
+//        System.out.println("RMID"+session.getAttributes().get("RMID"));
         //这块会实现自己业务，比如，当用户登录后，会把离线消息推送给用户
         //TextMessage returnMessage = new TextMessage("成功建立socket连接，你将收到的离线");
         //session.sendMessage(returnMessage);
@@ -47,7 +64,7 @@ public class SpringWebSocketHandler extends TextWebSocketHandler {
      */
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         logger.debug("关闭websocket连接");
-        String userId= (String) session.getAttributes().get(USER_ID);
+        String userId= session.getId();
         System.out.println("用户"+userId+"已退出！");
         users.remove(userId);
         System.out.println("剩余在线用户"+users.size());
