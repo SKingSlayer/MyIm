@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <button @click="send">发消息</button>
+  <div id="app">
+
   </div>
 </template>
 
@@ -8,8 +8,8 @@
 export default {
   data () {
     return {
-      path:"ws://localhost:8081/websocket/socketServer.do",
-      websocket:""
+      path:"ws://localhost:8081/websocket/getFriends",
+      socket:""
     }
   },
   mounted () {
@@ -27,10 +27,13 @@ export default {
         this.socket.onopen = this.open
         // 监听socket错误信息
         this.socket.onerror = this.error
+
         // 监听socket消息
-        alert("发送成功!");
-        this.socket.send("111112")
       }
+    },
+    friendAcquiring:function (){
+      let a="11111"
+      this.socket.send(a)
     },
     open: function () {
       console.log("socket连接成功")
@@ -44,7 +47,7 @@ export default {
     send: function () {
       let a="11111"
       console.log(a);
-      if(this.websocket.readyState==this.websocket.open){
+      if(this.socket.readyState==this.socket.open){
         alert(a)
         this.socket.send(a)
       }

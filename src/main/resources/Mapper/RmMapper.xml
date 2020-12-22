@@ -11,5 +11,8 @@
     <select id="getRmNum" resultType="int">
         select rmNum from Rm where id=#{id}
     </select>
+    <update id="reduceMoney" >
+    UPDATE  Rm SET rmNum=rmNum-#{param3} WHERE rmNUM>#{param3} and id=#{param1}
+</update>
 
 </mapper>

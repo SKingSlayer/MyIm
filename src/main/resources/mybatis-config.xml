@@ -18,6 +18,7 @@
     <mappers>
         <mapper resource="Mapper/HistoryMapper.xml"/>
         <mapper resource="Mapper/RmMapper.xml"/>
+        <mapper resource="Mapper/User.xml"/>
     </mappers>
 
 </configuration>

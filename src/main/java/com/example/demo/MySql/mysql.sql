@@ -23,3 +23,9 @@ create  table  if not exists Rm
     `rmNum` int(32),
     primary key (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+create  table  if not exists users
+(
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `money` int(32),
+    primary key (`id`)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;

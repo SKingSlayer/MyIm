@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserDao {
     List<User> getUserList();
     void insertUser(User user);
+    void addMoney(int id,int money);
+     User getUser(int id);
 }

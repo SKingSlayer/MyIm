@@ -16,7 +16,7 @@
                   <el-submenu index="1">
                     <template slot="title">
                       <i class="el-icon-s-platform"></i>
-                      <span>服务大厅</span>
+                      <span>好友</span>
                     </template>
                     <el-menu-item-group>
                       <router-link to="/Success/AppMain/chat">
@@ -25,8 +25,6 @@
                       <router-link to="/Success/AppMain/chat1">
                         <el-menu-item index="1-2">历史服务</el-menu-item>
                       </router-link>
-
-
                     </el-menu-item-group>
                   </el-submenu>
                   <el-submenu index="2">

@@ -5,9 +5,15 @@
 <!--namespace绑定一个dao接口-->
 <mapper namespace="com.example.demo.MyData.Dao.UserDao">
     <select id="getUserList" resultType="com.example.demo.MyData.Entity.User">
-        select * from  myuser
+        select * from  users
     </select>
     <insert id="insertUser" parameterType="com.example.demo.MyData.Entity.User">
-        INSERT INTO myuser(username,password) VALUES ('aaa','123')
+        INSERT INTO users(id,money) VALUES (2,300)
     </insert>
+    <update id="addMoney">
+        UPDATE users SET money=#{param2}+money WHERE id=#{param1}
+    </update>
+    <select id="getUser" resultType="com.example.demo.MyData.Entity.User">
+        select * from  users where id=#{id}
+    </select>
 </mapper>

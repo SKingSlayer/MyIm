@@ -7,6 +7,6 @@ public interface RmDao {
 
      void saveRm(Rm rm);
      int getRmNum(int id);
-     void getMyMoney(int rmId,int userName, int money);
+     void reduceMoney(int rmId,int userName, int money);
 
 }

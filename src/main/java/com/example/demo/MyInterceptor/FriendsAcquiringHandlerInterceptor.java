@@ -6,32 +6,29 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
-import javax.servlet.http.HttpSession;
+
 import java.util.Map;
 
-public class SpringWebSocketHandlerInterceptor extends HttpSessionHandshakeInterceptor {
+public class FriendsAcquiringHandlerInterceptor extends HttpSessionHandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) throws Exception {
-        System.out.println("Before Handshake");
+        System.out.println("Let's start!!!");
         if (request instanceof ServletServerHttpRequest) {
-            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-
-
-                //使用userName区分WebSocketHandler，以便定向发送消息
-
-               String rmId = (String) servletRequest.getServletRequest().getParameter("RMID");  //一般直接保存user实体
-               String userID=(String) servletRequest.getServletRequest().getParameter("USERID");
-                System.out.println(rmId);
-            System.out.println("UserID "+userID);
-                if (rmId !=null) {
-                    attributes.put("RMID",rmId);
-
-                  }
-            if (userID !=null) {
-                attributes.put("USERID",userID);
-
-            }
+//            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+//
+//            String username = (String) servletRequest.getServletRequest().getParameter("username");  //一般直接保存user实体
+//            String friendName=(String) servletRequest.getServletRequest().getParameter("friendName");
+//            System.out.println(username);
+//            System.out.println("UserID "+friendName);
+//            if (username !=null) {
+//                attributes.put("RMID",username);
+//
+//            }
+//            if (friendName !=null) {
+//                attributes.put("USERID",friendName);
+//
+//            }
         }
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }
