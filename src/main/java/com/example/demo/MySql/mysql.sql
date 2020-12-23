@@ -29,3 +29,10 @@ create  table  if not exists users
     `money` int(32),
     primary key (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+CREATE  TABLE  IF NOT EXISTS friend_list
+(
+    `user_id` INT(11),
+    `friend_id` INT(11),
+    `last_talk_time` DATETIME,
+    primary key (user_id,friend_id)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;

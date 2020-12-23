@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class FriendsAquiringHandler extends TextWebSocketHandler {
 
@@ -60,29 +63,35 @@ public class FriendsAquiringHandler extends TextWebSocketHandler {
         /**
          * 收到消息，自定义处理机制，实现业务
          */
-        System.out.println("服务器收到消息："+message.getPayload());
-        ObjectMapper objectMapper=new ObjectMapper();
-        FriendObject friendObject = objectMapper.readValue(message.getPayload(), FriendObject.class);
-        UserDao useDao = sqlSession.getMapper(UserDao.class);
-        RmDao rmDao=sqlSession.getMapper(RmDao.class);
-        //        useDao.addMoney(2,50);
-        //        rmDao.reduceMoney(1,1,50);
-        User user= useDao.getUser(friendObject.getFriendName());
-        if(user!=null){
-            System.out.println(user.getMoney());
-            String json = objectMapper.writeValueAsString(user);
-            TextMessage returnMessage = new TextMessage(json);
-            System.out.println(returnMessage);
-            session.sendMessage(returnMessage);
-        }
-        else
-        {
-            System.out.println("nullpointexception!!");
-            TextMessage returnMessage = new TextMessage("没有数据");
-            System.out.println(returnMessage);
-            session.sendMessage(returnMessage);
-        }
-
+        System.out.println("服务器收到消息：" + message.getPayload());
+            String msg = message.getPayload();
+            String test1 = "^test1";
+            Pattern p1=Pattern.compile("^test1");
+            Matcher m1=p1.matcher(msg);
+            if(m1.find()) {
+                msg = msg.replaceAll(test1, "");
+                System.out.println(msg);
+                System.out.println("new:" + msg);
+                ObjectMapper objectMapper = new ObjectMapper();
+                FriendObject friendObject = objectMapper.readValue(msg, FriendObject.class);
+                UserDao useDao = sqlSession.getMapper(UserDao.class);
+                RmDao rmDao = sqlSession.getMapper(RmDao.class);
+                //        useDao.addMoney(2,50);
+                //        rmDao.reduceMoney(1,1,50);
+                User user = useDao.getUser(friendObject.getFriendName());
+                if (user != null) {
+                    System.out.println(user.getMoney());
+                    String json = objectMapper.writeValueAsString(user);
+                    TextMessage returnMessage = new TextMessage(json);
+                    System.out.println(returnMessage);
+                    session.sendMessage(returnMessage);
+                } else {
+                    System.out.println("nullpointexception!!");
+                    TextMessage returnMessage = new TextMessage("没有数据");
+                    System.out.println(returnMessage);
+                    session.sendMessage(returnMessage);
+                }
+            }
 
 
 

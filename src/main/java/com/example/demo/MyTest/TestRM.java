@@ -1,8 +1,7 @@
 package com.example.demo.MyTest;
 
-import com.example.demo.MyData.Dao.HistoryDao;
 import com.example.demo.MyData.Dao.RmDao;
-import com.example.demo.MyData.Entity.CharHistory;
+
 import com.example.demo.MyData.Entity.Rm;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -11,7 +10,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 public class TestRM {
 

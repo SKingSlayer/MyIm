@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     friendAcquiring: function (){
-      let a=JSON.stringify({
+      let a="test1"+JSON.stringify({
         username:this.username,
         friendName:this.$refs.input1.value})
       this.socket.send(a)
@@ -50,7 +50,7 @@ export default {
       else{
         let dataJson = JSON.parse(e.data)
         console.log("get!!!")
-        console.log("没有数据"+dataJson.money);
+        console.log("money: "+dataJson.money);
       }
       },
 
