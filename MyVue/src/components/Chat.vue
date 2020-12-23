@@ -21,9 +21,7 @@ export default {
   },
   methods: {
     friendAcquiring: function (){
-      let a="test1"+JSON.stringify({
-        username:this.username,
-        friendName:this.$refs.input1.value})
+      let a="getFriends"+this.$refs.input1.value
       this.socket.send(a)
         console.log(a);
     },
@@ -49,8 +47,13 @@ export default {
        alert("没有数据")
       else{
         let dataJson = JSON.parse(e.data)
-        console.log("get!!!")
-        console.log("money: "+dataJson.money);
+        for(var i in dataJson){
+
+            console.log(dataJson[i].userId)
+            console.log(dataJson[i].friendId)
+            console.log(dataJson[i].lastTalkTime)
+
+        }
       }
       },
 

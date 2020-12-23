@@ -9,5 +9,5 @@ import java.util.List;
 public interface FriendDao {
      List<Friend> getFriendList(int userId);
      void addFriend(Friend friend);
-     void updateLastTalkTim(Date lastTalkTime);
+     void updateLastTalkTime(Friend friend);
 }

@@ -20,16 +20,18 @@ public class FriendTest {
         Date date=new Date();
         Friend friend=new Friend();
         friend.setFriendId(3);
-        friend.setUserId(1);
+        friend.setUserId(2);
         friend.setLastTalkTime(date);
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         FriendDao friendDao = sqlSession.getMapper(FriendDao.class);
-        List<Friend> friendList= friendDao.getFriendList(1);
-        ObjectMapper objectMapper=new ObjectMapper();
-        System.out.println(objectMapper.writeValueAsString(friendList));
+//        List<Friend> friendList= friendDao.getFriendList(1);
+//        ObjectMapper objectMapper=new ObjectMapper();
+//        System.out.println(objectMapper.writeValueAsString(friendList));
+//        friendDao.updateLastTalkTime(friend);
+        friendDao.addFriend(friend);
         sqlSession.commit();
         sqlSession.close();
 

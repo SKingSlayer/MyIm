@@ -1,8 +1,11 @@
 package com.example.demo.MyHandler;
 
 
+import com.example.demo.DaoFactory.DaoFactory;
+import com.example.demo.MyData.Dao.FriendDao;
 import com.example.demo.MyData.Dao.RmDao;
 import com.example.demo.MyData.Dao.UserDao;
+import com.example.demo.MyData.Entity.Friend;
 import com.example.demo.MyData.Entity.User;
 import com.example.demo.MyData.JsonObject.FriendObject;
 import com.example.demo.MyData.JsonObject.RmTmp;
@@ -23,7 +26,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +64,8 @@ public class FriendsAquiringHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 
         super.handleTextMessage(session, message);
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        DaoFactory daoFactory=new DaoFactory();
         /**
          * 收到消息，自定义处理机制，实现业务
          */
@@ -72,7 +78,7 @@ public class FriendsAquiringHandler extends TextWebSocketHandler {
                 msg = msg.replaceAll(test1, "");
                 System.out.println(msg);
                 System.out.println("new:" + msg);
-                ObjectMapper objectMapper = new ObjectMapper();
+
                 FriendObject friendObject = objectMapper.readValue(msg, FriendObject.class);
                 UserDao useDao = sqlSession.getMapper(UserDao.class);
                 RmDao rmDao = sqlSession.getMapper(RmDao.class);
@@ -92,6 +98,16 @@ public class FriendsAquiringHandler extends TextWebSocketHandler {
                     session.sendMessage(returnMessage);
                 }
             }
+            Pattern pf=Pattern.compile("^getFriends");
+            Matcher mf=pf.matcher(msg);
+            if(mf.find()){
+                msg=msg.replaceAll("^getFriends","");
+                List<Friend> friendList=daoFactory.getFriendDao().getFriendList(Integer.parseInt(msg));
+                String fl=objectMapper.writeValueAsString(friendList);
+                TextMessage returnMessage = new TextMessage(fl);
+                session.sendMessage(returnMessage);
+            }
+
 
 
 
