@@ -1,6 +1,6 @@
 package com.example.demo.MyTest;
 
-import com.example.demo.MyData.Dao.TalkRecordListDao;
+import com.example.demo.MyData.Dao.TalkMessageDao;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -20,7 +20,7 @@ public class MyTest1 {
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         SqlSession sqlSession = sqlSessionFactory.openSession();
-        TalkRecordListDao historyDao = sqlSession.getMapper(TalkRecordListDao.class);
+        TalkMessageDao historyDao = sqlSession.getMapper(TalkMessageDao.class);
         sqlSession.commit();
         sqlSession.close();
 

@@ -5,12 +5,12 @@ import lombok.Data;
 
 import java.util.Date;
 @Data
-public class TalkRecord {
+public class TalkMessage {
 
 
     public int userId;
     public int friendId;
-    public Date myTime;
-    public String record;
+    public Date talkTime;
+    public String message;
 
 }

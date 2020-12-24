@@ -13,7 +13,7 @@ public class FriendsAcquiringHandlerInterceptor extends HttpSessionHandshakeInte
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) throws Exception {
-        System.out.println("Let's start!!!");
+
         if (request instanceof ServletServerHttpRequest) {
 //            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
 //

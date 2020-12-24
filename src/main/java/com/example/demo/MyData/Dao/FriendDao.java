@@ -10,4 +10,5 @@ public interface FriendDao {
      List<Friend> getFriendList(int userId);
      void addFriend(Friend friend);
      void updateLastTalkTime(Friend friend);
+     Date getLastTalkTime(int userId,int friendId);
 }

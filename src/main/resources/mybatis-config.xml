@@ -16,10 +16,10 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="Mapper/TalkRecordListMapper.xml"/>
         <mapper resource="Mapper/RmMapper.xml"/>
         <mapper resource="Mapper/User.xml"/>
         <mapper resource="Mapper/FriendMapper.xml"/>
+        <mapper resource="Mapper/TalkMessageMapper.xml"/>
     </mappers>
 
 </configuration>

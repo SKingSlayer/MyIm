@@ -8,31 +8,32 @@ CREATE TABLE IF NOT EXISTS test  (
           `sample_time` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
           PRIMARY KEY (`id`)
  ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-create  table  if not exists CharHistory
+
+CREATE  TABLE  IF NOT EXISTS Rm
 (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `send` int(32),
-    `recv` int(32),
-    `myTime` datetime not null,
-    `history` varchar(1000) not null,
-    primary key (`id`)
-)ENGINE=myisam  DEFAULT CHARSET=utf8;
-create  table  if not exists Rm
-(
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `rmNum` int(32),
-    primary key (`id`)
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `rmNum` INT(32),
+    PRIMARY KEY (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
-create  table  if not exists users
+CREATE  TABLE  IF NOT EXISTS  users
 (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `money` int(32),
-    primary key (`id`)
+    PRIMARY KEY (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
 CREATE  TABLE  IF NOT EXISTS friend_list
 (
     `user_id` INT(11),
     `friend_id` INT(11),
     `last_talk_time` DATETIME,
-    primary key (user_id,friend_id)
+    PRIMARY KEY (user_id,friend_id)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+CREATE  TABLE  IF NOT EXISTS talk_message
+(
+    `id` INT(11) AUTO_INCREMENT,
+    `user_id` INT(11),
+    `friend_id` INT(11),
+    `talk_time` DATETIME,
+    `message` VARCHAR(50),
+    PRIMARY KEY (id)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
