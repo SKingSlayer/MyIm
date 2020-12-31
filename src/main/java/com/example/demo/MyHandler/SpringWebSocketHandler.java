@@ -18,8 +18,8 @@ import java.util.Map;
 
 public class SpringWebSocketHandler extends TextWebSocketHandler {
 
-    @Autowired
-    Producer producer;
+//    @Autowired
+//    Producer producer;
     private static Logger logger = LoggerFactory.getLogger(SpringWebSocketHandler.class);
 
     public static final Map<String, WebSocketSession> users;  //Map来存储WebSocketSession，key用USER_ID 即在线用户列表
@@ -39,24 +39,24 @@ public class SpringWebSocketHandler extends TextWebSocketHandler {
      */
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-
-        System.out.println("成功建立websocket连接!");
-        String sessionId = session.getId();
-        users.put(sessionId,session);
-        String rmid=(String) session.getAttributes().get("RMID") ;
-        String userId=(String) session.getAttributes().get("USERID");
-        RmTmp tmp=new RmTmp();
-        tmp.setRmId(rmid);
-        tmp.setSessionId(sessionId);
-        tmp.setUserId(userId);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(tmp);
-        producer.sendMessage(json);
-//        System.out.println("当前线上用户数量:"+users.size());
-//        System.out.println("RMID"+session.getAttributes().get("RMID"));
-        //这块会实现自己业务，比如，当用户登录后，会把离线消息推送给用户
-        //TextMessage returnMessage = new TextMessage("成功建立socket连接，你将收到的离线");
-        //session.sendMessage(returnMessage);
+//
+//        System.out.println("成功建立websocket连接!");
+//        String sessionId = session.getId();
+//        users.put(sessionId,session);
+//        String rmid=(String) session.getAttributes().get("RMID") ;
+//        String userId=(String) session.getAttributes().get("USERID");
+//        RmTmp tmp=new RmTmp();
+//        tmp.setRmId(rmid);
+//        tmp.setSessionId(sessionId);
+//        tmp.setUserId(userId);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String json = objectMapper.writeValueAsString(tmp);
+//        producer.sendMessage(json);
+////        System.out.println("当前线上用户数量:"+users.size());
+////        System.out.println("RMID"+session.getAttributes().get("RMID"));
+//        //这块会实现自己业务，比如，当用户登录后，会把离线消息推送给用户
+//        //TextMessage returnMessage = new TextMessage("成功建立socket连接，你将收到的离线");
+//        //session.sendMessage(returnMessage);
     }
 
     /**

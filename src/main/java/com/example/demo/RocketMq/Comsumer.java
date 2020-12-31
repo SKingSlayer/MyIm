@@ -29,7 +29,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Random;
 
-@Component
+//@Component
 public class Comsumer {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
@@ -44,7 +44,7 @@ public class Comsumer {
     public Comsumer() throws IOException {
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void handleRM() throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("test-group");
 

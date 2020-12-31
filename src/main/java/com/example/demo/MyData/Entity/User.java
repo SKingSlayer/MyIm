@@ -1,26 +1,16 @@
 package com.example.demo.MyData.Entity;
 
+import lombok.Data;
+
 import java.util.List;
-
+@Data
 public class User {
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getMoney() {
-        return money;
-    }
-
-    public void setMoney(int money) {
-        this.money = money;
-    }
-
-    private int id;
-    private  int money;
+    public int userId;
+    public  int money;
+    public String username;
+    private Integer status;
+    private String  code;
+    public String userEmail;
 
 
 }

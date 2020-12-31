@@ -9,7 +9,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class Producer {
     DefaultMQProducer producer = new DefaultMQProducer("test-group");
     Producer() throws MQClientException {

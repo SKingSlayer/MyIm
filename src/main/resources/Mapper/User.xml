@@ -7,7 +7,7 @@
     <select id="getUserList" resultType="com.example.demo.MyData.Entity.User">
         select * from  users
     </select>
-    <insert id="insertUser" parameterType="com.example.demo.MyData.Entity.User">
+    <insert id="registerUser" parameterType="com.example.demo.MyData.Entity.User">
         INSERT INTO users(id,money) VALUES (2,300)
     </insert>
     <update id="addMoney">

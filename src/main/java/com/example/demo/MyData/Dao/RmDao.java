@@ -9,4 +9,5 @@ public interface RmDao {
      int getRmNum(int id);
      void reduceMoney(int rmId,int userName, int money);
 
+
 }

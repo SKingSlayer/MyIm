@@ -17,7 +17,6 @@ public class TestRmSql {
     private static SqlSessionFactory sqlSessionFactory;
     public static  void main(String[] s) throws IOException {
         com.example.demo.MyData.Entity.User user1=new com.example.demo.MyData.Entity.User();
-        user1.setId(1);
         user1.setMoney(300);
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
