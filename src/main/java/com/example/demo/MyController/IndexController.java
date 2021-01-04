@@ -6,6 +6,7 @@ import com.example.demo.MyServer.UserService;
 import com.example.demo.utils.UUIDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.Request;
@@ -37,6 +38,12 @@ public class IndexController {
     public String index(){
 
         return "index";
+    }
+    @GetMapping("/socket")
+    public String socket(Model model){
+        model.addAttribute("userId","15998156726");
+        model.addAttribute("username","lihuan");
+        return "socket";
     }
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)

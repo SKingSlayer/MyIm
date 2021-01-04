@@ -2,8 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <div>
+        <span>id:</span>
+        <span id="s1" th:text="${userId}">hell</span>
+        <span>username:</span>
+        <span id="s2" th:text="${username}">hell</span>
+    </div>
+    <div id="root">
+        <input type="button" value="朋友列表"/>
+    </div>
+    <div>
+        <textarea id="chat" style="width: 1024px;height: 300px;"></textarea>
+    </div>
     <title>Netty-Websocket</title>
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
         // by zhengkai.blog.csdn.net
         var socket;
         if(!window.WebSocket){
@@ -16,6 +28,8 @@
                 ta.value += event.data+"\r\n";
             };
             socket.onopen = function(event){
+                creatDiv();
+                register();
                 var ta = document.getElementById('responseText');
                 ta.value = "Netty-WebSocket服务器。。。。。。连接  \r\n";
             };
@@ -31,6 +45,51 @@
                 socket.send(message);
                 alert("WebSocket 连接建立成功！");
         }
+        function register(){
+           let  userId="15998156726";
+            let msg="#init"+userId;
+            send(msg);
+        }
+        function getAllFriend(){
+            // document.getElementById()
+        }
+        function addFriend(friendId){
+            let  userId="1111";
+             let msg="#addFriend"+JSON.stringify({
+                "userId":userId,
+                "friendId":friendId
+            });
+             send(msg);
+
+        }
+        function connectToFriend(friendId){
+
+        }
+        function creatDiv(){
+            let row=1;
+            let col = 1;
+            var root=document.getElementById("root");
+            for(var i=0;i<1;i++){
+                const Odiv = document.createElement("div");             //创建一个div
+                const Ospan = document.createElement("span");//创建一个span
+                Odiv.id="div"+(10*(col-1)+row);
+                Odiv.style.cssText="width:200px;height:200px;background:#636363;text-align:center;line-height:220px"
+                Ospan.val=1;
+                if(row>9){
+                    row=0;
+                    col=col+1;
+                }
+                row=row+1;
+                console.log(Odiv.id);
+
+                //Odiv.id="box";                            //创建div的id为box
+                //Odiv.className="Box";                    //div的class为Box
+                Odiv.appendChild(Ospan);            //在div内创建一个span
+                root.append(Odiv);
+            }
+
+
+        }
 
     </script>
 </head>
@@ -39,7 +98,7 @@
     <label>ID</label><input type="text" name="uid"  value="66" /> <br />
     <label>TEXT</label><input type="text" name="message" value="hello" /> <br />
     <br /> <input type="button" value="发送ws消息"
-                  onClick="send(this.form.uid.value+':'+this.form.message.value)" />
+                  onClick="send(this.form.message.value)" />
     <hr color="black" />
     <h3>服务端返回的应答消息</h3>
     <textarea id="responseText" style="width: 1024px;height: 300px;"></textarea>
