@@ -3,11 +3,9 @@ package com.example.demo.MyData.Entity;
 import lombok.Data;
 
 import java.util.Date;
+
 @Data
-public class Friend {
+public class AliveUser {
     int userId;
-    int friendId;
-    String friendName;
-    int isAlive;
     Date lastTalkTime;
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace绑定一个dao接口-->
+<mapper namespace="com.example.demo.MyData.Dao.PHBDao">
+    <resultMap type="com.example.demo.MyData.Entity.PHB" id="PHBMap">
+        <!-- 指定主键列的封装规则
+            id定义主键会底层有优化
+            column:指定哪一列
+            property:指定对应的javaBean属性
+        -->
+        <id column="id" property="id"/>
+        <!-- 定义普通列封装规则 -->
+        <result column="sender_id" property="senderId"/>
+        <result column="receiver_id" property="receiverId"/>
+        <result column="money" property="money"/>
+        <result column="time_stamp" property="timeStamp"/>
+    </resultMap>
+    <select id="getPHB" resultMap="PHBMap">
+        select * from  phb where id=#{param1}
+</select>
+    <insert id="addPHB"  parameterType="com.example.demo.MyData.Entity.PHB">
+        INSERT INTO phb (sender_id,receiver_id,money,time_stamp) VALUES (#{senderId},#{receiverId},#{money},#{timeStamp})
+</insert>
+
+</mapper>

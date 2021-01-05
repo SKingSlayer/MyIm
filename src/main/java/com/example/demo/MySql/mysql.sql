@@ -9,31 +9,73 @@ CREATE TABLE IF NOT EXISTS test  (
           PRIMARY KEY (`id`)
  ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-CREATE  TABLE  IF NOT EXISTS Rm
+CREATE  TABLE  IF NOT EXISTS phb
 (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `rmNum` INT(32),
+    `sender_id` INT(11),
+    `receiver_id` INT(11),
+    `money` INT(11),
+    `time_stamp` DATETIME,
     PRIMARY KEY (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+INSERT INTO phb VALUES (1,1,2,300,NOW());
+INSERT INTO phb VALUES (2,1,3,500,NOW());
+INSERT INTO phb VALUES (3,1,2,300,NOW());
+INSERT INTO phb VALUES (4,2,1,300,NOW());
+
 CREATE  TABLE  IF NOT EXISTS  users
 (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `money` int(32),
-    PRIMARY KEY (`id`)
+    `user_id`   INT NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(20) NOT NULL ,
+    `password` VARCHAR(20) NOT NULL ,
+    `email` VARCHAR(20) NOT NULL ,
+    `money` INT(32),
+    PRIMARY KEY (`user_id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+INSERT INTO users VALUES (1,'xiaoming','xiaoming','706422117@qq.com',700);
+INSERT INTO users VALUES (2,'xiaohong','xiaohong','13973905146@qq.com',500);
+INSERT INTO users VALUES (3,'xiaobai','xiaobai','15243907814@qq.com',600);
+INSERT INTO users VALUES (4,'xiaoli','xiaoli','19918101654@qq.com',600);
+INSERT INTO users VALUES (5,'xiaoqing','xiaoqing','17055642394@qq.com',600);
+INSERT INTO users VALUES (6,'xiaoli','xiaoli','18128920529@qq.com',600);
+
+
+
 CREATE  TABLE  IF NOT EXISTS friend_list
 (
-    `user_id` INT(11),
-    `friend_id` INT(11),
+    `user_id` INT NOT NULL,
+    `friend_id` INT NOT NULL,
+    `friend_name` VARCHAR(20) NOT NULL ,
     `last_talk_time` DATETIME,
     PRIMARY KEY (user_id,friend_id)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+INSERT INTO friend_list VALUES (1,2,'xiaohong',NOW());
+INSERT INTO friend_list VALUES (2,1,'xiaoming',NOW());
+INSERT INTO friend_list VALUES (2,3,'xiaobai',NOW());
+INSERT INTO friend_list VALUES (3,2,'xiaohong',NOW());
+INSERT INTO friend_list VALUES (1,5,'xiaoli',NOW());
+INSERT INTO friend_list VALUES (5,1,'xiaoming',NOW());
+INSERT INTO friend_list VALUES (1,3,'xiaobai',NOW());
+
 CREATE  TABLE  IF NOT EXISTS talk_message
 (
-    `id` INT(11) AUTO_INCREMENT,
-    `user_id` INT(11),
-    `friend_id` INT(11),
+    `user_id` BIGINT(11),
+    `friend_id` BIGINT(11),
     `talk_time` DATETIME,
     `message` VARCHAR(50),
-    PRIMARY KEY (id)
+    PRIMARY KEY (`user_id`,`friend_id`)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+create table fulltext_test (
+                               id int(11) NOT NULL AUTO_INCREMENT,
+                               content text NOT NULL,
+                               tag varchar(255),
+                               PRIMARY KEY (id),
+                               FULLTEXT KEY content_tag_fulltext(content,tag)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE  TABLE  IF NOT EXISTS alive_user
+(
+    `user_id` INT NOT NULL,
+    `last_talk_time` DATETIME
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;

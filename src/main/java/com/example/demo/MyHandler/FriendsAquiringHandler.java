@@ -144,11 +144,11 @@ public class FriendsAquiringHandler extends TextWebSocketHandler {
             Matcher mf=pf.matcher(msg);
             if(mf.find()){
                 msg=msg.replaceAll("^getFriends","");
-                List<Friend> friendList=daoFactory.getFriendDao().getFriendList(Integer.parseInt(msg));
-                String fl=objectMapper.writeValueAsString(friendList);
-                System.out.println(fl);
-                TextMessage returnMessage = new TextMessage(fl);
-                session.sendMessage(returnMessage);
+//                List<Friend> friendList=daoFactory.getFriendDao().getFriendList(Integer.parseInt(msg));
+//                String fl=objectMapper.writeValueAsString(friendList);
+//                System.out.println(fl);
+//                TextMessage returnMessage = new TextMessage(fl);
+//                session.sendMessage(returnMessage);
                 return;
             }
         Pattern pa=Pattern.compile("^addFriend");

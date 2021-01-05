@@ -2,14 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        #box{
+            width: 300px;
+            height: 500px;
+            padding:20px;
+            border:solid 1px black;
+
+        }
+        #box .cont{
+            width: 300px;
+            height: 430px;
+        }
+        #box #txt{
+            width: 200px;
+            height: 50px;
+        }
+        #box #btn{
+            line-height: 50px;
+        }
+    </style>
     <div>
         <span>id:</span>
         <span id="s1" th:text="${userId}">hell</span>
         <span>username:</span>
         <span id="s2" th:text="${username}">hell</span>
     </div>
-    <div id="root">
+    <div id="friendlist">
         <input type="button" value="朋友列表"/>
+    </div>
+    <div contenteditable="true"></div>
+    <div id="box">
+        <div class="cont">
+            <p>在吗</p>
+            <p>你好</p>
+        </div>
+        <form>
+            <textarea id="txt"></textarea>
+            <input type="button" id="btn" value="发送">
+            <input type="button" id="hbtn" value="发红包">
+        </form>
     </div>
     <div>
         <textarea id="chat" style="width: 1024px;height: 300px;"></textarea>
@@ -18,6 +50,8 @@
     <script type="text/javascript" th:inline="javascript">
         // by zhengkai.blog.csdn.net
         var socket;
+        var friendInfo={};
+        var friendId=2;
         if(!window.WebSocket){
             window.WebSocket = window.MozWebSocket;
         }
@@ -26,10 +60,12 @@
             socket.onmessage = function(event){
                 var ta = document.getElementById('responseText');
                 ta.value += event.data+"\r\n";
+                doAF(event.data.toString());
+
             };
             socket.onopen = function(event){
-                creatDiv();
                 register();
+                getAllFriend();
                 var ta = document.getElementById('responseText');
                 ta.value = "Netty-WebSocket服务器。。。。。。连接  \r\n";
             };
@@ -43,52 +79,159 @@
         function send(message){
             if(!window.WebSocket){return;}
                 socket.send(message);
-                alert("WebSocket 连接建立成功！");
         }
         function register(){
-           let  userId="15998156726";
+           let  userId=[[${userId}]];
             let msg="#init"+userId;
             send(msg);
         }
         function getAllFriend(){
-            // document.getElementById()
-        }
-        function addFriend(friendId){
-            let  userId="1111";
-             let msg="#addFriend"+JSON.stringify({
-                "userId":userId,
-                "friendId":friendId
-            });
-             send(msg);
+            console.log("anyway");
+            let userId=[[${userId}]];
+            let msg="#getAF"+userId;
+            send(msg);
 
         }
-        function connectToFriend(friendId){
+        function doAF(msg){
+            let regAF=new RegExp("#getAF",'g');
 
-        }
-        function creatDiv(){
-            let row=1;
-            let col = 1;
-            var root=document.getElementById("root");
-            for(var i=0;i<1;i++){
-                const Odiv = document.createElement("div");             //创建一个div
-                const Ospan = document.createElement("span");//创建一个span
-                Odiv.id="div"+(10*(col-1)+row);
-                Odiv.style.cssText="width:200px;height:200px;background:#636363;text-align:center;line-height:220px"
-                Ospan.val=1;
-                if(row>9){
-                    row=0;
-                    col=col+1;
+
+            if(regAF.test(msg)){
+                msg=msg.replace(regAF,"");
+                let friends=JSON.parse(msg);
+                let row=1;
+                let col = 1;
+                for(var i=0;i<friends.length;i++){
+                    friendInfo.friendId={
+                        friendId:friends[i].friendId,
+                        friendName:friends[i].friendName,
+                        lastTalkTime:friends[i].lastTalkTime,
+                        isAlive:friends[i].isAlive
+
+                    }
+                    const Odiv = document.createElement("div");             //创建一个div
+                    Odiv.id="div"+(10*(col-1)+row);
+                    if(row>9){
+                        row=0;
+                        col=col+1;
+                    }
+                    const p= document.createElement("p");
+                    p.id=friends[i].friendId;
+                    p.innerHTML=friends[i].friendName;
+                    p.addEventListener('click', connectToFriend);
+                    Odiv.appendChild(p);
+                    var fl=document.getElementById("friendlist");
+                    fl.append(Odiv);
+                    row=row+1;
+                    // console.log(Odiv.id);
+                    // const fd= document.createElement("p");
+                    // fd.id=friends[i].friendId;
+                    // fd.innerText=friends[i].friendName;
+                    // const btn= document.createElement("button");
+                    // btn.id=friends[i].friendId;
+                    // btn.onclick=addFriend;
+                    //
+                    // var html=document.createElement('a');
+                    // html.setAttribute('href', 'ws://127.0.0.1:12345/ws'+'?'+"friendId="+friends[i].friendId);
+                    // html.style.display='block';
+                    // html.innerText=friends[i].friendName;
+                    // Odiv.appendChild(html);
+                    // root.append(Odiv);
                 }
-                row=row+1;
-                console.log(Odiv.id);
-
-                //Odiv.id="box";                            //创建div的id为box
-                //Odiv.className="Box";                    //div的class为Box
-                Odiv.appendChild(Ospan);            //在div内创建一个span
-                root.append(Odiv);
             }
 
 
+        }
+        function connectToFriend(e){
+            let p=e.currentTarget;
+            var s="#connectTF"+JSON.stringify(
+                {
+                    friendId:p.id,
+                    userId:[[${userId}]],
+                    currentTime:dateFormat(new Date())
+                }
+            )
+            console.log(s);
+            send(s);
+        }
+        // function addFriend(e){
+        //    let div=e.currentTarget;
+        //     let  userId="1111";
+        //      let msg="#addFriend"+JSON.stringify({
+        //         "userId":userId,
+        //         "friendId":friendId,
+        //          "currentTime":dateFormat(new Date())
+        //     });
+        //      send(msg);
+        //
+        // }
+       function dateFormat(time){
+            var date=new Date(time);
+            var year=date.getFullYear();
+            /* 在日期格式中，月份是从0开始的，因此要加0
+             * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+             * */
+            var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+            var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+            var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+            var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+            var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+            // 拼接
+            return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+        }
+
+        // function creatDiv() {
+        //     let row = 1;
+        //     let col = 1;
+        //     var root = document.getElementById("root");
+        //     for (var i = 0; i < 1; i++) {
+        //         const Odiv = document.createElement("div");             //创建一个div
+        //         Odiv.id = "div" + (10 * (col - 1) + row);
+        //         if (row > 9) {
+        //             row = 0;
+        //             col = col + 1;
+        //         }
+        //         row = row + 1;
+        //         console.log(Odiv.id);
+        //
+        //         //Odiv.id="box";                            //创建div的id为box
+        //         //Odiv.className="Box";
+        //         var html = document.createElement('a');
+        //         html.setAttribute('href', 'www.baidu.com');
+        //         html.style.display = 'block';
+        //         html.innerText = "hello world"
+        //         Odiv.appendChild(html);            //在div内创建一个span
+        //         root.append(Odiv);
+        //     }
+        //
+        //
+        // }
+        var otxt = document.getElementById("txt")
+        var obtn = document.getElementById("btn")
+        var ocont = document.querySelector(".cont")
+        var hbtn = document.getElementById("hbtn")
+
+        obtn.onclick = function () {
+            // 创建元素
+            var p = document.createElement("p");
+            // 设置内容
+            p.innerHTML = "<a href=\"http://www.w3school.com.cn\">红包</a>";
+            // 插入聊天区域
+            ocont.appendChild(p);
+            p.style.textAlign = "right"
+            // 清空输入框
+            otxt.value = "";
+
+
+        }
+        hbtn.onclick = function () {
+         var msg="#hb"+JSON.stringify({
+             senderId:[[${userId}]],
+             receiverId:friendId,
+             money:60,
+             timeStamp:dateFormat(new Date())
+         })
+           send(msg)
         }
 
     </script>

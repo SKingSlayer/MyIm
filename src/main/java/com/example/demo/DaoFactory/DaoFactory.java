@@ -1,6 +1,8 @@
 package com.example.demo.DaoFactory;
 
+import com.example.demo.MyData.Dao.AliveUserDao;
 import com.example.demo.MyData.Dao.FriendDao;
+import com.example.demo.MyData.Dao.PHBDao;
 import com.example.demo.MyData.Dao.TalkMessageDao;
 import lombok.Data;
 import org.apache.ibatis.io.Resources;
@@ -20,7 +22,8 @@ public class DaoFactory {
     SqlSession sqlSession ;
     FriendDao friendDao;
     TalkMessageDao talkMessageDao;
-
+    AliveUserDao aliveUserDao;
+    PHBDao phbDao;
 
     public DaoFactory() throws IOException {
        resource = "mybatis-config.xml";
@@ -29,6 +32,8 @@ public class DaoFactory {
         sqlSession = sqlSessionFactory.openSession();
          friendDao = sqlSession.getMapper(FriendDao.class);
          talkMessageDao=sqlSession.getMapper(TalkMessageDao.class);
+         aliveUserDao=sqlSession.getMapper(AliveUserDao.class);
+        phbDao=sqlSession.getMapper(PHBDao.class);
     }
 //
 }

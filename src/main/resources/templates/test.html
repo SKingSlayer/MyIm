@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Div Event</title>
+    <style>
+        #test {
+            background-color: red;
+            margin-left: 100px;
+            margin-right: 100px;
+            padding:30px;
+            width: 40%;
+            height: 30%;
+        }
+    </style>
+</head>
+<body>
+<div id="test">This is a div</div>
+
+<script>
+    var div = document.getElementById('test');
+    div.addEventListener('click', test);
+
+    function test(e) {
+        var test = e.currentTarget;
+        test.style.backgroundColor = "yellow";
+        console.log("Hi, div clicked!");
+
+    }
+    console.log("This is the test div page");
+</script>
+</body>
+</html>
