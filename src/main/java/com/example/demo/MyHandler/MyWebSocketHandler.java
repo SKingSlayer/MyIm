@@ -12,6 +12,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.socket.TextMessage;
 
 import java.math.BigInteger;
@@ -25,17 +27,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     public static ConcurrentHashMap<Integer, Channel> chm=new ConcurrentHashMap<>();
     public static AtomicInteger liveNumber=new AtomicInteger(0);
+
+
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("与客户端建立连接，通道开启！");
         liveNumber.getAndIncrement();
         System.out.println("线上的用户"+liveNumber.get());
-
     }
 
     @Override
@@ -48,8 +52,9 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {
-        chm.put(2,ctx.channel());
         DaoFactory daoFactory=new DaoFactory();
+
+        chm.put(2,ctx.channel());
         //首次连接是FullHttpRequest，处理参数 by zhengkai.blog.csdn.net
 //        if (msg instanceof FullHttpRequest) {
 //            FullHttpRequest request = (FullHttpRequest) msg;
@@ -166,6 +171,18 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             return map;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

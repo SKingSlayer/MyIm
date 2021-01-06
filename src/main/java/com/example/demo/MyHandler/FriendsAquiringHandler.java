@@ -104,7 +104,7 @@ public class FriendsAquiringHandler extends TextWebSocketHandler {
         if(mk.find()){
             msg=msg.replaceAll("^ack","");
             Friend friend=objectMapper.readValue(msg,Friend.class);
-            daoFactory.getFriendDao().updateLastTalkTime(friend);
+//            daoFactory.getFriendDao().updateLastTalkTime(friend);
             daoFactory.getSqlSession().commit();
             System.out.println("ack:"+friend.getUserId()+" " +friend.getFriendId());
             TextMessage textMessage=new TextMessage("以确认");

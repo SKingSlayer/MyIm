@@ -9,5 +9,6 @@ public class Friend {
     int friendId;
     String friendName;
     int isAlive;
-    Date lastTalkTime;
+    Date timeStamp;
+    int umsg;
 }

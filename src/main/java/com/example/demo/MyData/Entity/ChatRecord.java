@@ -1,16 +1,17 @@
 package com.example.demo.MyData.Entity;
 
-
 import lombok.Data;
 
 import java.util.Date;
+
 @Data
-public class TalkMessage {
+public class ChatRecord {
 
     public int id;
     public int userId;
     public int friendId;
-    public Date talkTime;
-    public String message;
+    public String Record;
+    public Date timeStamp;
+
 
 }

@@ -46,25 +46,30 @@ CREATE  TABLE  IF NOT EXISTS friend_list
     `user_id` INT NOT NULL,
     `friend_id` INT NOT NULL,
     `friend_name` VARCHAR(20) NOT NULL ,
-    `last_talk_time` DATETIME,
+    `time_stamp` DATETIME,
+    `umsg` INT NOT NULL ,
     PRIMARY KEY (user_id,friend_id)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
-INSERT INTO friend_list VALUES (1,2,'xiaohong',NOW());
-INSERT INTO friend_list VALUES (2,1,'xiaoming',NOW());
-INSERT INTO friend_list VALUES (2,3,'xiaobai',NOW());
-INSERT INTO friend_list VALUES (3,2,'xiaohong',NOW());
-INSERT INTO friend_list VALUES (1,5,'xiaoli',NOW());
-INSERT INTO friend_list VALUES (5,1,'xiaoming',NOW());
-INSERT INTO friend_list VALUES (1,3,'xiaobai',NOW());
+INSERT INTO friend_list VALUES (1,2,'xiaohong',NOW(),1);
+INSERT INTO friend_list VALUES (2,1,'xiaoming',NOW(),1);
+INSERT INTO friend_list VALUES (2,3,'xiaobai',NOW(),1);
+INSERT INTO friend_list VALUES (3,2,'xiaohong',NOW(),1);
+INSERT INTO friend_list VALUES (1,5,'xiaoli',NOW(),1);
+INSERT INTO friend_list VALUES (5,1,'xiaoming',NOW(),1);
+INSERT INTO friend_list VALUES (1,3,'xiaobai',NOW(),1);
 
-CREATE  TABLE  IF NOT EXISTS talk_message
+CREATE  TABLE  IF NOT EXISTS chat_record
 (
-    `user_id` BIGINT(11),
-    `friend_id` BIGINT(11),
-    `talk_time` DATETIME,
-    `message` VARCHAR(50),
-    PRIMARY KEY (`user_id`,`friend_id`)
+    `id` INT(11) AUTO_INCREMENT,
+    `user_id` INT(11),
+    `friend_id` INT(11),
+    `record` TEXT,
+    `time_stamp` DATETIME,
+    PRIMARY KEY (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+INSERT INTO chat_record VALUES (1,1,2,'hello world',NOW());
+INSERT INTO chat_record VALUES (2,2,1,'hello world',NOW());
+
 create table fulltext_test (
                                id int(11) NOT NULL AUTO_INCREMENT,
                                content text NOT NULL,

@@ -21,7 +21,6 @@ public class FriendTest {
         Friend friend=new Friend();
         friend.setFriendId(3);
         friend.setUserId(2);
-        friend.setLastTalkTime(date);
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -33,7 +32,6 @@ public class FriendTest {
 //        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        objectMapper.setDateFormat(fmt);
 //        System.out.println(objectMapper.writeValueAsString(friendList));
-       friendDao.updateLastTalkTime(friend);
 //        friendDao.addFriend(friend);
         System.out.println(date1);
         sqlSession.commit();
