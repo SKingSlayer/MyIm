@@ -156,7 +156,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
                  Friend friend=objectMapper.readValue(tmp,Friend.class);
                  List<ChatRecord> chatRecord= daoFactory.getChatRecordDao().getRecord(friend.getUserId(), friend.getFriendId(),daoFactory.getFriendDao().getTimeStamp(friend.getUserId(), friend.getFriendId()));
                  String s=objectMapper.writeValueAsString(chatRecord);
-                 chm.get(friend.getFriendId()).writeAndFlush(new TextWebSocketFrame("^#gm2"+s));
+                 chm.get(friend.getFriendId()).writeAndFlush(new TextWebSocketFrame("#gm2"+s));
              }
              Pattern p2=Pattern.compile("#cm");
              Matcher m2=p2.matcher(msg);

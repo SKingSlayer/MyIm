@@ -58,6 +58,7 @@ INSERT INTO friend_list VALUES (1,5,'xiaoli',NOW(),1);
 INSERT INTO friend_list VALUES (5,1,'xiaoming',NOW(),1);
 INSERT INTO friend_list VALUES (1,3,'xiaobai',NOW(),1);
 
+DROP TABLE chat_record;
 CREATE  TABLE  IF NOT EXISTS chat_record
 (
     `id` INT(11) AUTO_INCREMENT,
