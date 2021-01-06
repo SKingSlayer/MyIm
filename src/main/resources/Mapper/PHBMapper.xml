@@ -23,5 +23,9 @@
     <insert id="addPHB"  parameterType="com.example.demo.MyData.Entity.PHB">
         INSERT INTO phb (sender_id,receiver_id,money,time_stamp) VALUES (#{senderId},#{receiverId},#{money},#{timeStamp})
 </insert>
+    <select id="getLastId"  resultType="int" >
+        select max(id) from phb
+</select>
+
 
 </mapper>

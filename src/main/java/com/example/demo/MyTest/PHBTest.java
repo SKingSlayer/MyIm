@@ -14,15 +14,8 @@ public class PHBTest {
         public static  void main(String[] s) throws IOException {
             DaoFactory daoFactory=new DaoFactory();
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          System.out.println(daoFactory.getPhbDao().getLastId());
 
-            String x="{\"senderId\":\"1\",\"receiverId\":2,\"money\":60,\"timeStamp\":\"2021-01-05 16:11:06\"}";
-            int userId=1;
-            ObjectMapper objectMapper=new ObjectMapper();
-            objectMapper.setDateFormat(fmt);
-            PHB phb=objectMapper.readValue(x,PHB.class);
-          daoFactory.getPhbDao().addPHB(phb);
-          System.out.println(phb.getMoney());
-            daoFactory.getSqlSession().commit();
         }
 
 

@@ -7,5 +7,6 @@ import java.util.Date;
 public interface PHBDao {
     PHB getPHB(int id);
     void addPHB(PHB phb);
+    int getLastId();
 
 }

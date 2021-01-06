@@ -15,6 +15,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 
 import java.math.BigInteger;
@@ -52,6 +53,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     }
 
     @Override
+    @Transactional
     public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {
         DaoFactory daoFactory=new DaoFactory();
 
@@ -128,24 +130,33 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
                  }
                  ctx.channel().writeAndFlush(new TextWebSocketFrame("#getAF"+objectMapper.writeValueAsString(friends)));
              }
-             Pattern pb=Pattern.compile("^#hb");
+             Pattern pb=Pattern.compile("^#phb1");
              Matcher mhb=pb.matcher(msg);
              if(mhb.find()){
-                 String tmp=msg.replaceAll("^#hb","");
-                 JSONObject jsonObject=JSONObject.parseObject(tmp);
+                 String tmp=msg.replaceAll("^#phb1","");
                  PHB phb=objectMapper.readValue(tmp,PHB.class);
+                 daoFactory.getUserDao().reduceMoney(phb.getSenderId(),phb.getMoney());
                  daoFactory.getPhbDao().addPHB(phb);
+                 phb.setId(daoFactory.getPhbDao().getLastId());
                  daoFactory.getSqlSession().commit();
-                System.out.println(phb.getMoney());
+                 chm.get(phb.getSenderId()).writeAndFlush(new TextWebSocketFrame("#phb2"+objectMapper.writeValueAsString(phb)));
              }
-             Pattern p1=Pattern.compile("^#message");
+             Pattern p3=Pattern.compile("^#phb4");
+             Matcher m3=p3.matcher(msg);
+             if(m3.find()){
+                 String tmp=msg.replaceAll("^#phb4","");
+                 PHB phb=objectMapper.readValue(tmp,PHB.class);
+
+                 chm.get(phb.getSenderId()).writeAndFlush(new TextWebSocketFrame("#phb2"+objectMapper.writeValueAsString(phb)));
+             }
+             Pattern p1=Pattern.compile("^#gm1");
              Matcher m1=p1.matcher(msg);
              if(m1.find()){
-                 String tmp=msg.replaceAll("^#message","");
+                 String tmp=msg.replaceAll("^#gm1","");
                  Friend friend=objectMapper.readValue(tmp,Friend.class);
                  List<ChatRecord> chatRecord= daoFactory.getChatRecordDao().getRecord(friend.getUserId(), friend.getFriendId(),daoFactory.getFriendDao().getTimeStamp(friend.getUserId(), friend.getFriendId()));
                  String s=objectMapper.writeValueAsString(chatRecord);
-                 chm.get(friend.getFriendId()).writeAndFlush(new TextWebSocketFrame("^#message"+s));
+                 chm.get(friend.getFriendId()).writeAndFlush(new TextWebSocketFrame("^#gm2"+s));
              }
              Pattern p2=Pattern.compile("#cm");
              Matcher m2=p2.matcher(msg);

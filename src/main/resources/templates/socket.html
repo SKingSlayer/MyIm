@@ -61,7 +61,8 @@
                 var ta = document.getElementById('responseText');
                 ta.value += event.data+"\r\n";
                 doAF(event.data.toString());
-                confirmMessage(event.data.toString())
+                confirmMessage(event.data.toString());
+                doHB();
 
             };
             socket.onopen = function(event){
@@ -146,14 +147,14 @@
 
         }
         function getMessage(){
-            let s="#message"+JSON.stringify({
+            let s="#gm1"+JSON.stringify({
                 userId:[[${userId}]],
                 friendId:friendId
             })
             send(s)
         }
         function confirmMessage(msg){
-            let regAF=new RegExp("#message",'g');
+            let regAF=new RegExp("#gm2",'g');
             if(regAF.test(msg)){
                 let s="#cm"+JSON.stringify({
                     userId:[[${userId}]],
@@ -249,7 +250,7 @@
 
         }
         hbtn.onclick = function () {
-         var msg="#hb"+JSON.stringify({
+         var msg="#phb1"+JSON.stringify({
              senderId:[[${userId}]],
              receiverId:friendId,
              money:60,
@@ -257,6 +258,31 @@
          })
            send(msg)
         }
+       function doHB(msg){
+            console.log("hb");
+           let regHB=new RegExp("#phb2",'g');
+           if(regHB.test(msg)){
+               msg=msg.replace(regHB,"")
+               console.log(msg);
+               let regHB1=new RegExp("true","")
+               if(regHB1.test(msg)){
+                   msg=msg.replace(regHB1,"")
+                   let msgObject=JSON.parse(msg);
+                   let s="#phb3"+JSON.stringify({
+                       userId:msgObject.userId,
+                       friendId:msgObject.friendId,
+                       id:msgObject.id,
+                       timeStamp:msgObject.timeStamp,
+                       money:msgObject.money,
+                   })
+                   send(s);
+
+               }
+           }
+
+
+       }
+
 
     </script>
 </head>

@@ -7,6 +7,8 @@ import java.util.List;
 public interface UserDao {
     List<User> getUserList();
     void registerUser(User user);
-    void addMoney(int id,int money);
-     User getUser(int id);
+    void addMoney(int userId,int money);
+     User getUser(int userId);
+     void reduceMoney(int userId,int money);
+     int  getMoney(int userId);
 }
