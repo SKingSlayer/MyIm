@@ -50,7 +50,7 @@ CREATE  TABLE  IF NOT EXISTS friend_list
     `umsg` INT NOT NULL ,
     PRIMARY KEY (user_id,friend_id)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
-INSERT INTO friend_list VALUES (1,2,'xiaohong',NOW(),1);
+# INSERT INTO friend_list VALUES (1,2,'xiaohong',NOW(),1);
 INSERT INTO friend_list VALUES (2,1,'xiaoming',NOW(),1);
 INSERT INTO friend_list VALUES (2,3,'xiaobai',NOW(),1);
 INSERT INTO friend_list VALUES (3,2,'xiaohong',NOW(),1);

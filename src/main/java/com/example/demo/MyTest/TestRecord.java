@@ -16,8 +16,6 @@ public class TestRecord {
         chatRecord.setUserId(2);
         chatRecord.setTimeStamp(new Date());
         chatRecord.setRecord("hello gdut");
-        List<ChatRecord> chatRecordList= daoFactory.getChatRecordDao().getRecord(1,2);
-        System.out.println(chatRecordList.size());
         daoFactory.getSqlSession().commit();
     }
 }

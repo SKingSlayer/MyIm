@@ -26,10 +26,10 @@
         SELECT *  FROM  friend_list WHERE user_id=#{userId}
     </select>
     <insert id="addFriend" parameterType="com.example.demo.MyData.Entity.Friend">
-        INSERT INTO friend_list(user_id,friend_id,time_stamp) VALUES (#{userId},#{friendId},#{TimeStamp})
+        INSERT INTO friend_list(user_id,friend_id,time_stamp) VALUES (#{userId},#{friendId},#{timeStamp})
     </insert>
-    <update id="updateTimeStamp" >
-    UPDATE  friend_list SET time_stamp=#{TimeStamp} WHERE user_id=#{userId} and friend_id=#{friendId}
+    <update id="updateTimeStamp"  parameterType="com.example.demo.MyData.Entity.Friend">
+    UPDATE  friend_list SET time_stamp=#{timeStamp} WHERE user_id=#{userId} and friend_id=#{friendId}
 </update>
     <select id="getTimeStamp"  resultMap="DateMap">
         SELECT time_stamp FROM  friend_list WHERE user_id=#{param1} and friend_id=#{param2}

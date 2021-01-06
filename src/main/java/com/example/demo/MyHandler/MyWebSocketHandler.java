@@ -3,6 +3,7 @@ package com.example.demo.MyHandler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.DaoFactory.DaoFactory;
+import com.example.demo.MyData.Entity.ChatRecord;
 import com.example.demo.MyData.Entity.Friend;
 import com.example.demo.MyData.Entity.PHB;
 import com.example.demo.MyData.Entity.TalkMessage;
@@ -136,6 +137,24 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
                  daoFactory.getPhbDao().addPHB(phb);
                  daoFactory.getSqlSession().commit();
                 System.out.println(phb.getMoney());
+             }
+             Pattern p1=Pattern.compile("^#message");
+             Matcher m1=p1.matcher(msg);
+             if(m1.find()){
+                 String tmp=msg.replaceAll("^#message","");
+                 Friend friend=objectMapper.readValue(tmp,Friend.class);
+                 List<ChatRecord> chatRecord= daoFactory.getChatRecordDao().getRecord(friend.getUserId(), friend.getFriendId(),daoFactory.getFriendDao().getTimeStamp(friend.getUserId(), friend.getFriendId()));
+                 String s=objectMapper.writeValueAsString(chatRecord);
+                 chm.get(friend.getFriendId()).writeAndFlush(new TextWebSocketFrame("^#message"+s));
+             }
+             Pattern p2=Pattern.compile("#cm");
+             Matcher m2=p2.matcher(msg);
+             if(m2.find()){
+                 String tmp=msg.replaceAll("^#cm","");
+                 Friend friend=objectMapper.readValue(tmp,Friend.class);
+                 daoFactory.getFriendDao().updateTimeStamp(friend);
+                 daoFactory.getSqlSession().commit();
+                 System.out.println("success");
              }
 
         }

@@ -19,7 +19,7 @@
         <result column="time_stamp" property="timeStamp"/>
     </resultMap>
     <select id="getRecord" resultMap="RecordMap">   <!-- 是resultMap不是resulttype -->
-        SELECT *  FROM  chat_record WHERE user_id=#{param1} and friend_id=#{param2} or user_id=#{param2} and friend_id=#{param1}
+        SELECT *  FROM  chat_record WHERE (user_id=#{param1} and friend_id=#{param2} or user_id=#{param2} and friend_id=#{param1}) and time_stamp>#{param3}
     </select>
     <insert id="addRecord" parameterType="com.example.demo.MyData.Entity.ChatRecord">
         INSERT INTO chat_record (user_id,friend_id,record,time_stamp) VALUES  (#{userId},#{friendId},#{record},#{timeStamp})

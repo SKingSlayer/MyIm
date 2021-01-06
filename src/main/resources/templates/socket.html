@@ -50,7 +50,7 @@
     <script type="text/javascript" th:inline="javascript">
         // by zhengkai.blog.csdn.net
         var socket;
-        var friendInfo={};
+        var friendInfo=[];
         var friendId=2;
         if(!window.WebSocket){
             window.WebSocket = window.MozWebSocket;
@@ -61,6 +61,7 @@
                 var ta = document.getElementById('responseText');
                 ta.value += event.data+"\r\n";
                 doAF(event.data.toString());
+                confirmMessage(event.data.toString())
 
             };
             socket.onopen = function(event){
@@ -102,12 +103,12 @@
                 let row=1;
                 let col = 1;
                 for(var i=0;i<friends.length;i++){
-                    friendInfo.friendId={
+                    friendInfo[friends[i].friendId]={
                         friendId:friends[i].friendId,
                         friendName:friends[i].friendName,
-                        lastTalkTime:friends[i].lastTalkTime,
-                        isAlive:friends[i].isAlive
-
+                        timeStamp:friends[i].timeStamp,
+                        isAlive:friends[i].isAlive,
+                        umsg:friends[i].umsg
                     }
                     const Odiv = document.createElement("div");             //创建一个div
                     Odiv.id="div"+(10*(col-1)+row);
@@ -115,10 +116,12 @@
                         row=0;
                         col=col+1;
                     }
+                    console.log(friendInfo);
                     const p= document.createElement("p");
                     p.id=friends[i].friendId;
-                    p.innerHTML=friends[i].friendName;
-                    p.addEventListener('click', connectToFriend);
+                    let id=p.id;
+                    p.innerHTML=friends[i].friendName+' '+friendInfo[id].isAlive;
+                    p.addEventListener('click', getMessage);
                     Odiv.appendChild(p);
                     var fl=document.getElementById("friendlist");
                     fl.append(Odiv);
@@ -142,6 +145,27 @@
 
 
         }
+        function getMessage(){
+            let s="#message"+JSON.stringify({
+                userId:[[${userId}]],
+                friendId:friendId
+            })
+            send(s)
+        }
+        function confirmMessage(msg){
+            let regAF=new RegExp("#message",'g');
+            if(regAF.test(msg)){
+                let s="#cm"+JSON.stringify({
+                    userId:[[${userId}]],
+                    friendId:friendId,
+                    timeStamp:dateFormat(new Date())
+                })
+                send(s)
+            }
+
+
+        }
+
         function connectToFriend(e){
             let p=e.currentTarget;
             var s="#connectTF"+JSON.stringify(
