@@ -49,6 +49,68 @@
     <title>Netty-Websocket</title>
     <script type="text/javascript" th:inline="javascript">
         // by zhengkai.blog.csdn.net
+        var otxt = document.getElementById("txt")
+        var obtn = document.getElementById("btn")
+        var ocont = document.querySelector(".cont")
+        var hbtn = document.getElementById("hbtn")
+
+        obtn.onclick = function () {
+            // // 创建元素
+            // var p = document.createElement("p");
+            // // 设置内容
+            // // p.innerHTML = "<a href=\"http://www.w3school.com.cn\">红包</a>";
+            // // 插入聊天区域
+            // p.innerText=otxt.value;
+            // ocont.appendChild(p);
+            var s=otxt.value;
+            s="#sm1"+JSON.stringify({
+                userId:[[${userId}]],
+                friendId:friendId,
+                record:s,
+                timeStamp:dateFormat(new Date())
+            })
+            send(s);
+
+            // p.style.textAlign = "right"
+            // 清空输入框
+            otxt.value = "";
+
+
+
+        }
+        hbtn.onclick = function () {
+            var msg="#phb1"+JSON.stringify({
+                senderId:[[${userId}]],
+                receiverId:friendId,
+                money:60,
+                timeStamp:dateFormat(new Date())
+            })
+            send(msg)
+        }
+        function doHB(msg){
+            console.log("hb");
+            let regHB=new RegExp("#phb2",'g');
+            if(regHB.test(msg)){
+                msg=msg.replace(regHB,"")
+                console.log(msg);
+                let regHB1=new RegExp("true","")
+                if(regHB1.test(msg)){
+                    msg=msg.replace(regHB1,"")
+                    let msgObject=JSON.parse(msg);
+                    let s="#phb3"+JSON.stringify({
+                        userId:msgObject.userId,
+                        friendId:msgObject.friendId,
+                        id:msgObject.id,
+                        timeStamp:msgObject.timeStamp,
+                        money:msgObject.money,
+                    })
+                    send(s);
+
+                }
+            }
+
+
+        }
         var socket;
         var friendInfo=[];
         var friendId=2;
@@ -171,17 +233,18 @@
 
         }
         function doMessage(msg){
-            msg=JSON.parse(msg);
-            for(let i=0;i<msg.length;i++){
-                if(msg[i].friendId===friendId){
-                    console.log(msg[i].friendId===friendId);
+
+            msg=JSON.parse(msg);//如果msg不是数组的话就不能用msg.length
+
+                if(msg.friendId===friendId){
                     var p = document.createElement("p");
-                    p.innerText=msg[i].record;
+                    p.innerText=msg.record;
                     ocont.appendChild(p);
                     p.style.textAlign = "right"
                 }
-            }
         }
+
+
 
         function connectToFriend(e){
             let p=e.currentTarget;
@@ -247,58 +310,7 @@
         //
         //
         // }
-        var otxt = document.getElementById("txt")
-        var obtn = document.getElementById("btn")
-        var ocont = document.querySelector(".cont")
-        var hbtn = document.getElementById("hbtn")
 
-        obtn.onclick = function () {
-            // 创建元素
-            var p = document.createElement("p");
-            // 设置内容
-            // p.innerHTML = "<a href=\"http://www.w3school.com.cn\">红包</a>";
-            // 插入聊天区域
-            p.innerText=otxt.value;
-            ocont.appendChild(p);
-            p.style.textAlign = "right"
-            // 清空输入框
-            otxt.value = "";
-
-
-        }
-        hbtn.onclick = function () {
-         var msg="#phb1"+JSON.stringify({
-             senderId:[[${userId}]],
-             receiverId:friendId,
-             money:60,
-             timeStamp:dateFormat(new Date())
-         })
-           send(msg)
-        }
-       function doHB(msg){
-            console.log("hb");
-           let regHB=new RegExp("#phb2",'g');
-           if(regHB.test(msg)){
-               msg=msg.replace(regHB,"")
-               console.log(msg);
-               let regHB1=new RegExp("true","")
-               if(regHB1.test(msg)){
-                   msg=msg.replace(regHB1,"")
-                   let msgObject=JSON.parse(msg);
-                   let s="#phb3"+JSON.stringify({
-                       userId:msgObject.userId,
-                       friendId:msgObject.friendId,
-                       id:msgObject.id,
-                       timeStamp:msgObject.timeStamp,
-                       money:msgObject.money,
-                   })
-                   send(s);
-
-               }
-           }
-
-
-       }
 
 
     </script>

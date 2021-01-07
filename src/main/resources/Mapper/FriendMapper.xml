@@ -34,6 +34,12 @@
     <select id="getTimeStamp"  resultMap="DateMap">
         SELECT time_stamp FROM  friend_list WHERE user_id=#{param1} and friend_id=#{param2}
     </select>
+    <update id="updateUMSG">
+    UPDATE  friend_list SET umsg=umsg+1 WHERE user_id=#{param1} and friend_id=#{param2}
+</update>
+    <update id="clearUMSG">
+    UPDATE  friend_list SET umsg=0 WHERE user_id=#{param1} and friend_id=#{param2}
+</update>
 
 
 </mapper>

@@ -138,8 +138,27 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
                  daoFactory.getUserDao().reduceMoney(phb.getSenderId(),phb.getMoney());
                  daoFactory.getPhbDao().addPHB(phb);
                  phb.setId(daoFactory.getPhbDao().getLastId());
+                 ChatRecord chatRecord=new ChatRecord();
+                 String s=objectMapper.writeValueAsString(phb);//红包信息 userId friendId id
+                 s="#phb6"+s;
+                 chatRecord.setRecord(s);//聊天记录中的红包：phb6+红包
+                 chatRecord.setUserId(phb.getSenderId());
+                 chatRecord.setFriendId(phb.getReceiverId());
+                 chatRecord.setTimeStamp(phb.getTimeStamp());
+                 daoFactory.getChatRecordDao().addRecord(chatRecord);
+                 daoFactory.getFriendDao().updateUMSG(chatRecord.getUserId(),chatRecord.getFriendId());
+                 daoFactory.getFriendDao().updateUMSG(chatRecord.getFriendId(),chatRecord.getUserId());
+                 String m=objectMapper.writeValueAsString(chatRecord);
+                 if(chm.get(chatRecord.getFriendId())!=null)
+                 {
+                     chm.get(chatRecord.getFriendId()).writeAndFlush(new TextWebSocketFrame("#gm2"+m));//将消息发送给朋友
+                 }
+                 if(chm.get(chatRecord.getUserId())!=null)
+                 {
+                     chm.get(chatRecord.getUserId()).writeAndFlush(new TextWebSocketFrame("#gm2"+m));//将消息发送给自己
+                 }
                  daoFactory.getSqlSession().commit();
-                 chm.get(phb.getSenderId()).writeAndFlush(new TextWebSocketFrame("#phb2"+objectMapper.writeValueAsString(phb)));
+                 System.out.println("success");
              }
              Pattern p3=Pattern.compile("^#phb4");
              Matcher m3=p3.matcher(msg);
@@ -149,24 +168,46 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
                  chm.get(phb.getSenderId()).writeAndFlush(new TextWebSocketFrame("#phb2"+objectMapper.writeValueAsString(phb)));
              }
-             Pattern p1=Pattern.compile("^#gm1");
+             Pattern p1=Pattern.compile("^#gm1");//用于服务器处理客户端消息请求
              Matcher m1=p1.matcher(msg);
              if(m1.find()){
                  String tmp=msg.replaceAll("^#gm1","");
                  Friend friend=objectMapper.readValue(tmp,Friend.class);
                  List<ChatRecord> chatRecord= daoFactory.getChatRecordDao().getRecord(friend.getUserId(), friend.getFriendId(),daoFactory.getFriendDao().getTimeStamp(friend.getUserId(), friend.getFriendId()));
                  String s=objectMapper.writeValueAsString(chatRecord);
-                 chm.get(friend.getFriendId()).writeAndFlush(new TextWebSocketFrame("#gm2"+s));
+                 chm.get(friend.getFriendId()).writeAndFlush(new TextWebSocketFrame("#gm2"+s));//gm2用于客户端处理服务器传来的消息
              }
-             Pattern p2=Pattern.compile("#cm");
+             Pattern p2=Pattern.compile("#cm");//标志客户端已读消息，可以更新时间戳，并将未读消息清零
              Matcher m2=p2.matcher(msg);
              if(m2.find()){
                  String tmp=msg.replaceAll("^#cm","");
                  Friend friend=objectMapper.readValue(tmp,Friend.class);
-                 daoFactory.getFriendDao().updateTimeStamp(friend);
+                 daoFactory.getFriendDao().updateTimeStamp(friend);//更新时间戳
+                 daoFactory.getFriendDao().clearUMSG(friend.getUserId(),friend.getFriendId());
                  daoFactory.getSqlSession().commit();
                  System.out.println("success");
              }
+             Pattern p4=Pattern.compile("#sm1");//客户端向服务器发送消息，服务器存储消息，更新friend_list user和friend的未读消息
+             Matcher m4=p4.matcher(msg);
+             if(m4.find()){
+                 String tmp=msg.replaceAll("^#sm1","");
+                 ChatRecord chatRecord=objectMapper.readValue(tmp,ChatRecord.class);
+                 daoFactory.getChatRecordDao().addRecord(chatRecord);
+                 daoFactory.getFriendDao().updateUMSG(chatRecord.getUserId(),chatRecord.getFriendId());
+                 daoFactory.getFriendDao().updateUMSG(chatRecord.getFriendId(),chatRecord.getUserId());
+                 String m=objectMapper.writeValueAsString(chatRecord);
+                 if(chm.get(chatRecord.getFriendId())!=null)
+                 {
+                     chm.get(chatRecord.getFriendId()).writeAndFlush(new TextWebSocketFrame("#gm2"+m));//将消息发送给朋友
+                 }
+                 if(chm.get(chatRecord.getUserId())!=null)
+                 {
+                     chm.get(chatRecord.getUserId()).writeAndFlush(new TextWebSocketFrame("#gm2"+m));//将消息发送给自己
+                 }
+                 daoFactory.getSqlSession().commit();
+                 System.out.println("success");
+             }
+
 
         }
         super.channelRead(ctx, message);

@@ -13,4 +13,6 @@ public interface FriendDao {
      void updateTimeStamp(Friend friend);
      Date getLastTalkTime(int userId,int friendId);
      Date getTimeStamp(int userId,int friendId);
+     void updateUMSG(int userId,int friendId);
+     void clearUMSG(int userId,int friendId);
 }
