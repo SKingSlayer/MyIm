@@ -15,7 +15,7 @@
         UPDATE users SET money=#{param2}+money WHERE user_id=#{param1}
     </update>
     <update id="reduceMoney">
-        UPDATE users SET money=#{param2}-money WHERE user_id=#{param1}
+        UPDATE users SET money=money-#{param2} WHERE user_id=#{param1}
     </update>
     <select id="getMoney" >
         SELECT money FROM  users WHERE user_id=#{userId}

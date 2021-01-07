@@ -26,6 +26,8 @@
     <select id="getLastId"  resultType="int" >
         select max(id) from phb
 </select>
-
+    <delete id="deletePHB">
+        DELETE FROM phb where id=#{id}
+</delete>
 
 </mapper>

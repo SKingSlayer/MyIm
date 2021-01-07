@@ -8,5 +8,6 @@ public interface PHBDao {
     PHB getPHB(int id);
     void addPHB(PHB phb);
     int getLastId();
+    void deletePHB(int id);
 
 }

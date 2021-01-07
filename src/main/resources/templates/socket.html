@@ -235,12 +235,32 @@
         function doMessage(msg){
 
             msg=JSON.parse(msg);//如果msg不是数组的话就不能用msg.length
-
                 if(msg.friendId===friendId){
-                    var p = document.createElement("p");
-                    p.innerText=msg.record;
-                    ocont.appendChild(p);
-                    p.style.textAlign = "right"
+                    let regHB=new RegExp("#phb6",'g');
+                    if(regHB.test(msg.record)){
+                        let s=msg.record.replace("#phb6",'');
+                        s=JSON.parse(s);
+                        let b=document.createElement("button");
+                        b.onclick=function (){
+                            let kk="#phb7"+JSON.stringify({
+                                senderId:s.senderId,
+                                receiverId:s.receiverId,
+                                id:s.id,
+                                timeStamp:s.timeStamp
+                            })
+                            send(kk)
+                        }
+                        ocont.appendChild(b);
+                        b.value="b1";
+                        b.style.textAlign="right";
+                    }
+                    else{
+                        var p = document.createElement("p");
+                        p.innerText=msg.record;
+                        ocont.appendChild(p);
+                        p.style.textAlign = "right"
+                    }
+
                 }
         }
 

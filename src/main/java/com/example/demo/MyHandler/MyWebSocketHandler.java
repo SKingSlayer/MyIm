@@ -165,7 +165,6 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
              if(m3.find()){
                  String tmp=msg.replaceAll("^#phb4","");
                  PHB phb=objectMapper.readValue(tmp,PHB.class);
-
                  chm.get(phb.getSenderId()).writeAndFlush(new TextWebSocketFrame("#phb2"+objectMapper.writeValueAsString(phb)));
              }
              Pattern p1=Pattern.compile("^#gm1");//用于服务器处理客户端消息请求
@@ -206,6 +205,20 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
                  }
                  daoFactory.getSqlSession().commit();
                  System.out.println("success");
+             }
+             Pattern p5=Pattern.compile("^#phb7");
+             Matcher m5=p5.matcher(msg);
+             if(m5.find()){
+                 String tmp=msg.replaceAll("^#phb7","");
+                 PHB phb=objectMapper.readValue(tmp,PHB.class);
+                 PHB phb1= daoFactory.getPhbDao().getPHB(phb.getId());
+
+                     daoFactory.getUserDao().addMoney(phb.getSenderId(),phb1.getMoney());//可以用客户端传过来的红包信息 安全性方面是个问题
+                     daoFactory.getPhbDao().deletePHB(phb1.getId());
+                     daoFactory.getSqlSession().commit(); //抢到了要发条信息在消息数据表中，然后通知给双方
+                     System.out.println(phb.getSenderId());
+                     chm.get(phb.getSenderId()).writeAndFlush(new TextWebSocketFrame("抢到了"));
+
              }
 
 
