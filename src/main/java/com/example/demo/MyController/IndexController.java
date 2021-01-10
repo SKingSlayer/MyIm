@@ -51,6 +51,12 @@ public class IndexController {
         model.addAttribute("username","lihuan");
         return "socket";
     }
+    @GetMapping("/xiaohong")
+    public String xiaoong(Model model){
+        model.addAttribute("userId","2");
+        model.addAttribute("username","xiaohong");
+        return "xiaohong";
+    }
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@RequestParam("username")String username,@RequestParam("userId") String userId

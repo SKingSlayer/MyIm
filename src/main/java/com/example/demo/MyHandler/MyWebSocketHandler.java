@@ -56,8 +56,6 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     @Transactional
     public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {
         DaoFactory daoFactory=new DaoFactory();
-
-        chm.put(2,ctx.channel());
         //首次连接是FullHttpRequest，处理参数 by zhengkai.blog.csdn.net
 //        if (msg instanceof FullHttpRequest) {
 //            FullHttpRequest request = (FullHttpRequest) msg;
@@ -102,7 +100,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
              if(mi.find()){
                  System.out.println("flag");
                  int userId=Integer.parseInt(msg.replaceAll("^#init",""));
-
+                 System.out.println(userId);
                  if(daoFactory.getAliveUserDao().getAliveUser(userId)==null)
                      daoFactory.getAliveUserDao().addAliveUser(userId,new Date());
                  else

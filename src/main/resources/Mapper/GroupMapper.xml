@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace绑定一个dao接口-->
+<mapper namespace="com.example.demo.MyData.Dao.GroupDao">
+    <resultMap type="com.example.demo.MyData.Entity.Group" id="MyGroupMap">
+        <!-- 指定主键列的封装规则
+            id定义主键会底层有优化
+            column:指定哪一列
+            property:指定对应的javaBean属性
+        -->
+        <id column="group_id" property="groupId"/>
+        <!-- 定义普通列封装规则 -->
+        <result column="group_name" property="groupName"/>
+        <result column="membership" property="membership"/>
+        <!-- 其他不指定的列会自动封装,推荐:只要写resultMap,就要把全部的映射规则都写上-->
+        <result column="time_stamp" property="timeStamp"/>
+    </resultMap>
+    <resultMap type="Date" id="DateMap">
+
+        <result column="time_stamp" property="timeStamp"/>
+    </resultMap>
+
+    <select id="getGroup" resultMap="MyGroupMap">   <!-- 是resultMap不是resulttype -->
+        SELECT *  FROM  my_group WHERE group_id=#{groupId}
+    </select>
+    <insert id="addGroup">
+        INSERT INTO my_group (membership,group_name,create_time) values (0,#{group_name},NOW());
+    </insert>
+    <select id="getLastId" resultType="int">
+        select max(group_id) from my_group
+    </select>
+    <select id="getGroupById" resultMap="MyGroupMap">
+        SELECT * FROM my_group WHERE group_id=#{groupId}
+    </select>
+    <update id="updateMembership" parameterType="int">
+        UPDATE my_group SET membership=membership+1 WHERE group_id=#{groupId}
+    </update>
+    <!--    <insert id="addFriend" parameterType="com.example.demo.MyData.Entity.Friend">-->
+    <!--        INSERT INTO friend_list(user_id,friend_id,time_stamp) VALUES (#{userId},#{friendId},#{timeStamp})-->
+    <!--    </insert>-->
+
+
+
+
+</mapper>

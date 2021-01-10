@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace绑定一个dao接口-->
+<mapper namespace="com.example.demo.MyData.Dao.MemberDao">
+    <resultMap type="com.example.demo.MyData.Entity.Member" id="MyMemberMap">
+        <!-- 指定主键列的封装规则
+            id定义主键会底层有优化
+            column:指定哪一列
+            property:指定对应的javaBean属性
+        -->
+        <id column="user_id" property="userId"/>
+        <!-- 定义普通列封装规则 -->
+        <result column="group_id" property="groupId"/>
+        <result column="group_name" property="groupName"/>
+        <result column="user_name" property="userName"/>
+        <!-- 其他不指定的列会自动封装,推荐:只要写resultMap,就要把全部的映射规则都写上-->
+        <result column="time_stamp" property="timeStamp"/>
+        <result column="umsg" property="umsg"/>
+    </resultMap>
+    <resultMap type="Date" id="DateMap">
+
+        <result column="time_stamp" property="timeStamp"/>
+    </resultMap>
+
+    <select id="getAllMember" resultMap="MyMemberMap">   <!-- 是resultMap不是resulttype -->
+        SELECT *  FROM  member WHERE group_id=#{groupId}
+    </select>
+    <insert id="addGroup" parameterType="com.example.demo.MyData.Entity.Member">
+        INSERT INTO member (user_id,group_id,user_name,group_name,umsg,time_stamp) VALUES (#{userId},#{groupId},#{userName},#{groupName},#{umsg},NOW());
+    </insert>
+<!--    <insert id="addFriend" parameterType="com.example.demo.MyData.Entity.Friend">-->
+<!--        INSERT INTO friend_list(user_id,friend_id,time_stamp) VALUES (#{userId},#{friendId},#{timeStamp})-->
+<!--    </insert>-->
+
+
+
+
+</mapper>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        #box{
+            width: 300px;
+            height: 500px;
+            padding:20px;
+            border:solid 1px black;
+
+        }
+        #box .cont{
+            width: 300px;
+            height: 430px;
+        }
+        #box #txt{
+            width: 200px;
+            height: 50px;
+        }
+        #box #btn{
+            line-height: 50px;
+        }
+    </style>
+    <div>
+        <span>id:</span>
+        <span id="s1" th:text="${userId}">hell</span>
+        <span>username:</span>
+        <span id="s2" th:text="${username}">hell</span>
+    </div>
+    <div id="friendlist">
+        <input type="button" value="朋友列表"/>
+    </div>
+    <div contenteditable="true"></div>
+    <div id="box">
+        <div class="cont">
+            <p>在吗</p>
+            <p>你好</p>
+        </div>
+        <form>
+            <textarea id="txt"></textarea>
+            <input type="button" id="btn" value="发送">
+            <input type="button" id="hbtn" value="发红包">
+        </form>
+    </div>
+    <div>
+        <textarea id="chat" style="width: 1024px;height: 300px;"></textarea>
+    </div>
+    <title>Netty-Websocket</title>
+    <script type="text/javascript" th:inline="javascript">
+        // by zhengkai.blog.csdn.net
+        var otxt = document.getElementById("txt")
+        var obtn = document.getElementById("btn")
+        var ocont = document.querySelector(".cont")
+        var hbtn = document.getElementById("hbtn")
+
+        obtn.onclick = function () {
+            // // 创建元素
+            // var p = document.createElement("p");
+            // // 设置内容
+            // // p.innerHTML = "<a href=\"http://www.w3school.com.cn\">红包</a>";
+            // // 插入聊天区域
+            // p.innerText=otxt.value;
+            // ocont.appendChild(p);
+            var s=otxt.value;
+            s="#sm1"+JSON.stringify({
+                userId:[[${userId}]],
+                friendId:friendId,
+                record:s,
+                timeStamp:dateFormat(new Date())
+            })
+            send(s);
+
+            // p.style.textAlign = "right"
+            // 清空输入框
+            otxt.value = "";
+
+
+
+        }
+        hbtn.onclick = function () {
+            var msg="#phb1"+JSON.stringify({
+                senderId:[[${userId}]],
+                receiverId:friendId,
+                money:60,
+                timeStamp:dateFormat(new Date())
+            })
+            send(msg)
+        }
+        function doHB(msg){
+            console.log("hb");
+            let regHB=new RegExp("#phb2",'g');
+            if(regHB.test(msg)){
+                msg=msg.replace(regHB,"")
+                console.log(msg);
+                let regHB1=new RegExp("true","")
+                if(regHB1.test(msg)){
+                    msg=msg.replace(regHB1,"")
+                    let msgObject=JSON.parse(msg);
+                    let s="#phb3"+JSON.stringify({
+                        userId:msgObject.userId,
+                        friendId:msgObject.friendId,
+                        id:msgObject.id,
+                        timeStamp:msgObject.timeStamp,
+                        money:msgObject.money,
+                    })
+                    send(s);
+
+                }
+            }
+
+
+        }
+        var socket;
+        var friendInfo=[];
+        var friendId=1;
+        if(!window.WebSocket){
+            window.WebSocket = window.MozWebSocket;
+        }
+        if(window.WebSocket){
+            socket = new WebSocket("ws://127.0.0.1:12345/ws");
+            socket.onmessage = function(event){
+                var ta = document.getElementById('responseText');
+                ta.value += event.data+"\r\n";
+                doAF(event.data.toString());
+                confirmMessage(event.data.toString());
+                doHB();
+
+            };
+            socket.onopen = function(event){
+                register();
+                getAllFriend();
+                var ta = document.getElementById('responseText');
+                ta.value = "Netty-WebSocket服务器。。。。。。连接  \r\n";
+            };
+            socket.onclose = function(event){
+                var ta = document.getElementById('responseText');
+                ta.value = "Netty-WebSocket服务器。。。。。。关闭 \r\n";
+            };
+        }else{
+            alert("您的浏览器不支持WebSocket协议！");
+        }
+        function send(message){
+            if(!window.WebSocket){return;}
+            socket.send(message);
+        }
+        function register(){
+            let  userId=[[${userId}]];
+            let msg="#init"+userId;
+            send(msg);
+        }
+        function getAllFriend(){
+            console.log("anyway");
+            let userId=[[${userId}]];
+            let msg="#getAF"+userId;
+            send(msg);
+
+        }
+        function doAF(msg){
+            let regAF=new RegExp("#getAF",'g');
+
+
+            if(regAF.test(msg)){
+                msg=msg.replace(regAF,"");
+                let friends=JSON.parse(msg);
+                let row=1;
+                let col = 1;
+                for(var i=0;i<friends.length;i++){
+                    friendInfo[friends[i].friendId]={
+                        friendId:friends[i].friendId,
+                        friendName:friends[i].friendName,
+                        timeStamp:friends[i].timeStamp,
+                        isAlive:friends[i].isAlive,
+                        umsg:friends[i].umsg
+                    }
+                    const Odiv = document.createElement("div");             //创建一个div
+                    Odiv.id="div"+(10*(col-1)+row);
+                    if(row>9){
+                        row=0;
+                        col=col+1;
+                    }
+                    console.log(friendInfo);
+                    const p= document.createElement("p");
+                    p.id=friends[i].friendId;
+                    let id=p.id;
+                    p.innerHTML=friends[i].friendName+' '+friendInfo[id].isAlive;
+                    p.addEventListener('click', getMessage);
+                    Odiv.appendChild(p);
+                    var fl=document.getElementById("friendlist");
+                    fl.append(Odiv);
+                    row=row+1;
+                    // console.log(Odiv.id);
+                    // const fd= document.createElement("p");
+                    // fd.id=friends[i].friendId;
+                    // fd.innerText=friends[i].friendName;
+                    // const btn= document.createElement("button");
+                    // btn.id=friends[i].friendId;
+                    // btn.onclick=addFriend;
+                    //
+                    // var html=document.createElement('a');
+                    // html.setAttribute('href', 'ws://127.0.0.1:12345/ws'+'?'+"friendId="+friends[i].friendId);
+                    // html.style.display='block';
+                    // html.innerText=friends[i].friendName;
+                    // Odiv.appendChild(htm
+                    // l);
+                    // root.append(Odiv);
+                }
+            }
+
+
+        }
+        function getMessage(){
+            let s="#gm1"+JSON.stringify({
+                userId:[[${userId}]],
+                friendId:friendId
+            })
+            send(s)
+        }
+        function confirmMessage(msg){
+
+            let regAF=new RegExp("#gm2",'g');
+            if(regAF.test(msg)){
+                msg=msg.replace(regAF,'');
+                console.log(msg);
+                doMessage(msg);
+                let s="#cm"+JSON.stringify({
+                    userId:[[${userId}]],
+                    friendId:friendId,
+                    timeStamp:dateFormat(new Date())
+                })
+                send(s)
+            }
+
+
+        }
+        function doMessage(msg){
+
+            msg=JSON.parse(msg);//如果msg不是数组的话就不能用msg.length
+            if(msg.friendId===friendId){
+                let regHB=new RegExp("#phb6",'g');
+                if(regHB.test(msg.record)){
+                    let s=msg.record.replace("#phb6",'');
+                    s=JSON.parse(s);
+                    let b=document.createElement("button");
+                    b.onclick=function (){
+                        let kk="#phb7"+JSON.stringify({
+                            senderId:s.senderId,
+                            receiverId:s.receiverId,
+                            id:s.id,
+                            timeStamp:s.timeStamp
+                        })
+                        send(kk)
+                    }
+                    ocont.appendChild(b);
+                    b.value="b1";
+                    b.style.textAlign="right";
+                }
+                else{
+                    var p = document.createElement("p");
+                    p.innerText=msg.record;
+                    ocont.appendChild(p);
+                    p.style.textAlign = "right"
+                }
+
+            }
+        }
+
+
+
+        function connectToFriend(e){
+            let p=e.currentTarget;
+            var s="#connectTF"+JSON.stringify(
+                {
+                    friendId:p.id,
+                    userId:[[${userId}]],
+                    currentTime:dateFormat(new Date())
+                }
+            )
+            console.log(s);
+            send(s);
+        }
+        // function addFriend(e){
+        //    let div=e.currentTarget;
+        //     let  userId="1111";
+        //      let msg="#addFriend"+JSON.stringify({
+        //         "userId":userId,
+        //         "friendId":friendId,
+        //          "currentTime":dateFormat(new Date())
+        //     });
+        //      send(msg);
+        //
+        // }
+        function dateFormat(time){
+            var date=new Date(time);
+            var year=date.getFullYear();
+            /* 在日期格式中，月份是从0开始的，因此要加0
+             * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+             * */
+            var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+            var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+            var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+            var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+            var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+            // 拼接
+            return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+        }
+
+        // function creatDiv() {
+        //     let row = 1;
+        //     let col = 1;
+        //     var root = document.getElementById("root");
+        //     for (var i = 0; i < 1; i++) {
+        //         const Odiv = document.createElement("div");             //创建一个div
+        //         Odiv.id = "div" + (10 * (col - 1) + row);
+        //         if (row > 9) {
+        //             row = 0;
+        //             col = col + 1;
+        //         }
+        //         row = row + 1;
+        //         console.log(Odiv.id);
+        //
+        //         //Odiv.id="box";                            //创建div的id为box
+        //         //Odiv.className="Box";
+        //         var html = document.createElement('a');
+        //         html.setAttribute('href', 'www.baidu.com');
+        //         html.style.display = 'block';
+        //         html.innerText = "hello world"
+        //         Odiv.appendChild(html);            //在div内创建一个span
+        //         root.append(Odiv);
+        //     }
+        //
+        //
+        // }
+
+
+
+    </script>
+</head>
+<body>
+<form onSubmit="return false;">
+    <label>ID</label><input type="text" name="uid"  value="66" /> <br />
+    <label>TEXT</label><input type="text" name="message" value="hello" /> <br />
+    <br /> <input type="button" value="发送ws消息"
+                  onClick="send(this.form.message.value)" />
+    <hr color="black" />
+    <h3>服务端返回的应答消息</h3>
+    <textarea id="responseText" style="width: 1024px;height: 300px;"></textarea>
+</form>
+</body>
+</html>

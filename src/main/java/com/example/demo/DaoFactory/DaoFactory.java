@@ -23,7 +23,8 @@ public  class DaoFactory {
     PHBDao phbDao;
     ChatRecordDao chatRecordDao;
     UserDao userDao;
-
+    MemberDao memberDao;
+    GroupDao groupDao;
     public DaoFactory() throws IOException {
        resource = "mybatis-config.xml";
          inputStream = Resources.getResourceAsStream(resource);
@@ -35,6 +36,8 @@ public  class DaoFactory {
         phbDao=sqlSession.getMapper(PHBDao.class);
         chatRecordDao=sqlSession.getMapper(ChatRecordDao.class);
         userDao=sqlSession.getMapper(UserDao.class);
+        memberDao=sqlSession.getMapper(MemberDao.class);
+        groupDao=sqlSession.getMapper(GroupDao.class);
     }
 //
 }

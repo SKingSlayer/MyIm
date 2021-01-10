@@ -23,6 +23,8 @@
         <mapper resource="Mapper/AliveUserMapper.xml"/>
         <mapper resource="Mapper/PHBMapper.xml"/>
         <mapper resource="Mapper/ChatRecordMapper.xml"/>
+        <mapper resource="Mapper/MemberMapper.xml"/>
+        <mapper resource="Mapper/GroupMapper.xml"/>
     </mappers>
 
 </configuration>
