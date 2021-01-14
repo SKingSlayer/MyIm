@@ -36,7 +36,6 @@ public  class DaoFactory {
         phbDao=sqlSession.getMapper(PHBDao.class);
         chatRecordDao=sqlSession.getMapper(ChatRecordDao.class);
         userDao=sqlSession.getMapper(UserDao.class);
-        memberDao=sqlSession.getMapper(MemberDao.class);
         groupDao=sqlSession.getMapper(GroupDao.class);
     }
 //

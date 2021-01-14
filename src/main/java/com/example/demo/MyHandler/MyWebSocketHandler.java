@@ -3,10 +3,11 @@ package com.example.demo.MyHandler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.DaoFactory.DaoFactory;
-import com.example.demo.MyData.Entity.ChatRecord;
-import com.example.demo.MyData.Entity.Friend;
-import com.example.demo.MyData.Entity.PHB;
-import com.example.demo.MyData.Entity.TalkMessage;
+import com.example.demo.MyData.Dao.GroupRecordDao;
+import com.example.demo.MyData.Dao.MemberDao;
+import com.example.demo.MyData.Entity.*;
+import com.example.demo.utils.SpringUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,10 +15,14 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 
+import javax.xml.transform.Templates;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,11 +34,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     public static ConcurrentHashMap<Integer, Channel> chm=new ConcurrentHashMap<>();
     public static AtomicInteger liveNumber=new AtomicInteger(0);
+    GroupRecordDao groupRecordDao;
+    MemberDao memberDao;
+    ObjectMapper objectMapper;
+//    @Autowired
+//    RedisTemplate<int,>
 
 
 
@@ -53,9 +62,13 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     }
 
     @Override
-    @Transactional
     public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {
         DaoFactory daoFactory=new DaoFactory();
+        memberDao=(MemberDao) SpringUtil.getBean("MemberDao");
+        objectMapper=new ObjectMapper();
+        groupRecordDao=(GroupRecordDao) SpringUtil.getBean("GroupRecordDao");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        objectMapper.setDateFormat(fmt);
         //首次连接是FullHttpRequest，处理参数 by zhengkai.blog.csdn.net
 //        if (msg instanceof FullHttpRequest) {
 //            FullHttpRequest request = (FullHttpRequest) msg;
@@ -85,10 +98,6 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             System.out.println(paramMap.get("friendId"));
         }
 
-
-        ObjectMapper objectMapper=new ObjectMapper();
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        objectMapper.setDateFormat(fmt);
          if(message instanceof TextWebSocketFrame){
             //正常的TEXT消息类型
             TextWebSocketFrame frame=(TextWebSocketFrame)message;
@@ -219,15 +228,57 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
              }
 
-             Pattern p6=Pattern.compile("^#msg1");
+             Pattern p6=Pattern.compile("^#group");
              Matcher m6=p6.matcher(msg);
              if(m6.find()){
-                 String tmp=msg.replaceAll("^#msg1","");
+                 String tmp=msg.replaceAll("^#group","");
+                 doGroupMsg(tmp,ctx);  //注意是tmp，不是msg。
              }
 
         }
         super.channelRead(ctx, message);
     }
+    private void doGroupMsg(String msg,ChannelHandlerContext ctx) throws JsonProcessingException {
+            Pattern p1=Pattern.compile(("#msg1")); //有#号
+            Matcher m1=p1.matcher(msg);
+            if(m1.find()){
+                msg=msg.replaceAll("#msg1","");//有#号
+                doGroupMsg2(msg,ctx);
+            }
+        Pattern p4=Pattern.compile(("#msg3")); //有#号
+        Matcher m4=p4.matcher(msg);
+        if(m4.find()){
+            msg=msg.replaceAll("#msg3","");//有#号
+            doGroupMsg4(msg,ctx);
+        }
+    }
+    void doGroupMsg2(String msg,ChannelHandlerContext ctx) throws JsonProcessingException {
+
+        GroupRecord groupRecord= objectMapper.readValue(msg, GroupRecord.class);
+        int groupId=groupRecord.getGroupId();//获取群ID
+        int userId=groupRecord.getUserId();
+        groupRecordDao.addGroupRecord(groupRecord);//2.存储record
+        List<Member> members=memberDao.getAllMember(groupId);;
+        System.out.println(members.size());
+        for (Member member : members) {
+
+            memberDao.updateUMSG(member.getUserId(),member.getGroupId());
+
+
+            if (chm.get(member.getUserId()) != null) {
+                System.out.println(member.getUserId());
+                chm.get(member.getUserId()).writeAndFlush(new TextWebSocketFrame("#group#msg2" + msg));//3.发送消息
+            }
+        }
+    }
+
+    void doGroupMsg4(String msg,ChannelHandlerContext ctx) throws JsonProcessingException {
+        GroupRecord groupRecord= objectMapper.readValue(msg, GroupRecord.class);
+        int groupId=groupRecord.getGroupId();//获取群ID
+        int userId=groupRecord.getUserId();
+        memberDao.clearUMSG(userId,groupId);
+        memberDao.updateTimeStamp(userId,groupId,groupRecord.getTimeStamp());
+    }//如果消息丢了，可能再看到消息，不过可能性不大
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {

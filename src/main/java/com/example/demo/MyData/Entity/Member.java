@@ -2,6 +2,8 @@ package com.example.demo.MyData.Entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class Member {
     int userId;
@@ -9,5 +11,5 @@ public class Member {
     String userName;
     String groupName;
     int umsg;
-    int timeStamp;
+    Date timeStamp;
 }

@@ -8,7 +8,13 @@
       type: com.alibaba.druid.pool.DruidDataSource
     db2:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.56.10:3369/s2?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      url: jdbc:mysql://192.168.56.10:3369/s1?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
+      username: root
+      password: 123456
+      type: com.alibaba.druid.pool.DruidDataSource
+    db3:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.56.10:23306/s1?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: root
       password: 123456
       type: com.alibaba.druid.pool.DruidDataSource

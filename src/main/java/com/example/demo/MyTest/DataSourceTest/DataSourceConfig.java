@@ -31,8 +31,7 @@ public class DataSourceConfig {
 
     //数据库db1数据源
     @Bean(name = "dataSource1")
-    @Primary
-    @ConfigurationProperties("spring.datasource.db1")
+    @ConfigurationProperties("spring.datasource.db3")
     public DruidDataSource dataSource1 () {
         return DruidDataSourceBuilder.create().build();
     }
@@ -44,13 +43,22 @@ public class DataSourceConfig {
         return DruidDataSourceBuilder.create().build();
     }
 
+    @Bean(name = "dataSource3")
+    @Primary
+    @ConfigurationProperties("spring.datasource.db1")
+    public DruidDataSource dataSource3 () {
+        return DruidDataSourceBuilder.create().build();
+    }
+
     //将两个数据源添加至动态数据源配置类中 //用autoweired
     @Bean(name = "myRoutingDataSource")
     public MyRoutingDataSource myRoutingDataSource (@Qualifier("dataSource1") DruidDataSource dataSource1,
-                                                    @Qualifier("dataSource2") DruidDataSource dataSource2) {
+                                                    @Qualifier("dataSource2") DruidDataSource dataSource2,
+                                                    @Qualifier("dataSource3") DruidDataSource dataSource3) {
         Map<Object, Object> map = new HashMap<>();
         map.put(DataSourceType.DB1, dataSource1);
         map.put(DataSourceType.DB2, dataSource2);
+        map.put(DataSourceType.DB3,dataSource3);
         MyRoutingDataSource myRoutingDataSource = new MyRoutingDataSource();
         myRoutingDataSource.setTargetDataSources(map);
         myRoutingDataSource.setDefaultTargetDataSource(dataSource1);
@@ -59,9 +67,10 @@ public class DataSourceConfig {
     //数据源session
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory (@Qualifier("dataSource1") DruidDataSource dataSource1,
-                                                @Qualifier("dataSource2") DruidDataSource dataSource2) throws Exception {
+                                                @Qualifier("dataSource2") DruidDataSource dataSource2,
+                                                @Qualifier("dataSource3") DruidDataSource dataSource3) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(myRoutingDataSource(dataSource1,dataSource2));
+        factoryBean.setDataSource(myRoutingDataSource(dataSource1,dataSource2,dataSource3));
 
         return factoryBean.getObject();
     }

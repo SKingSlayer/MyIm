@@ -94,9 +94,7 @@ CREATE  TABLE  IF NOT EXISTS user
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
 INSERT INTO user VALUES (1,'xiaoming',20);
 
-alter table chat_record add fulltext
-
-    DROP TABLE chat_record;
+DROP TABLE chat_record;
 CREATE  TABLE  IF NOT EXISTS chat_record
 (
     `id` INT(11) AUTO_INCREMENT,
