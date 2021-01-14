@@ -2,13 +2,13 @@
   datasource:
     db1:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.56.10:23306/db1?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      url: jdbc:mysql://192.168.56.10:3368/s1?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: root
       password: 123456
       type: com.alibaba.druid.pool.DruidDataSource
     db2:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.56.10:23306/db2?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      url: jdbc:mysql://192.168.56.10:3369/s2?useUnicode=true&characterEncoding=utf-8&useSSL=false&autoReconnect=true&failOverReadOnly=false
       username: root
       password: 123456
       type: com.alibaba.druid.pool.DruidDataSource
@@ -35,3 +35,4 @@
    pingTimeout: 6000000
    # Ping消息间隔（毫秒），默认25秒。客户端向服务器发送一条心跳消息间隔
    pingInterval: 25000
+   springfox.documentation.swagger.v2.path: /api-docs

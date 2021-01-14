@@ -219,6 +219,11 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
              }
 
+             Pattern p6=Pattern.compile("^#msg1");
+             Matcher m6=p6.matcher(msg);
+             if(m6.find()){
+                 String tmp=msg.replaceAll("^#msg1","");
+             }
 
         }
         super.channelRead(ctx, message);

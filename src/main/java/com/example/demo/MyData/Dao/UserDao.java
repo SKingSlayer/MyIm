@@ -11,4 +11,8 @@ public interface UserDao {
      User getUser(int userId);
      void reduceMoney(int userId,int money);
      int  getMoney(int userId);
+
+    Object findById(int id);
+
+    Object findByName(String name);
 }

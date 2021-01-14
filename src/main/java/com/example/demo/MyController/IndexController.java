@@ -1,6 +1,8 @@
 package com.example.demo.MyController;
 
 import com.example.demo.DaoFactory.DaoFactory;
+import com.example.demo.MyData.Dao.GroupDao;
+import com.example.demo.MyData.Dao.MemberDao;
 import com.example.demo.MyData.Entity.Friend;
 import com.example.demo.MyData.Entity.TmpUser;
 import com.example.demo.MyImpl.UserServiceImpl;
@@ -22,6 +24,11 @@ import java.util.List;
 public class IndexController {
     @Autowired
     UserServiceImpl userServiceImpl;
+    @Autowired
+    GroupDao groupDao;
+    @Autowired
+    MemberDao memberDao;
+
     @GetMapping("/")
     public String  returnLogin(){
 
@@ -72,6 +79,7 @@ public class IndexController {
         System.out.println(username);
         return "having send";
     }
+
     @ResponseBody
     @GetMapping("/checkcode")
     public String checkCode(@RequestParam("code") String code){

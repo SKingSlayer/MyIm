@@ -2,6 +2,8 @@ package com.example.demo.MyTest.DataSourceTest;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.example.demo.zookeeper.ZKCustor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -19,8 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@MapperScan(basePackages = "com.example.demo.MyTest.DataSourceTest")
+@MapperScan({"com.example.demo.MyTest.DataSourceTest","com.example.demo.MyData.Dao","com.example.demo.zookeeper"})
+@Slf4j
 public class DataSourceConfig {
+    @Bean(initMethod = "init")
+    public ZKCustor zkCustor(){
+        return new ZKCustor();
+    }
+
     //数据库db1数据源
     @Bean(name = "dataSource1")
     @Primary
@@ -36,7 +44,7 @@ public class DataSourceConfig {
         return DruidDataSourceBuilder.create().build();
     }
 
-    //将两个数据源添加至动态数据源配置类中
+    //将两个数据源添加至动态数据源配置类中 //用autoweired
     @Bean(name = "myRoutingDataSource")
     public MyRoutingDataSource myRoutingDataSource (@Qualifier("dataSource1") DruidDataSource dataSource1,
                                                     @Qualifier("dataSource2") DruidDataSource dataSource2) {
@@ -54,9 +62,7 @@ public class DataSourceConfig {
                                                 @Qualifier("dataSource2") DruidDataSource dataSource2) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(myRoutingDataSource(dataSource1,dataSource2));
-        // 设置mapper.xml的位置路径
-        Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*/*.xml");
-        factoryBean.setMapperLocations(resources);
+
         return factoryBean.getObject();
     }
 

@@ -1,13 +1,39 @@
-use MyData;
+use s1;
+DROP TABLE chat_record;
+CREATE  TABLE  IF NOT EXISTS chat_record
+(
+    `id` INT(11) AUTO_INCREMENT,
+    `user_id` INT(11),
+    `friend_id` INT(11),
+    `record` TEXT,
+    `time_stamp` DATETIME,
+    PRIMARY KEY (`id`)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+alter table chat_record add fulltext index idx_full_keyword(record);
+INSERT INTO chat_record VALUES (1,1,2,'hello world',NOW());
+INSERT INTO chat_record VALUES (2,2,1,'hello world',NOW());
+INSERT INTO chat_record VALUES (3,2,1,'ni shi hao rn',NOW());
+
+CREATE  TABLE  IF NOT EXISTS group_record
+(
+    `id` INT(11) AUTO_INCREMENT,
+    `user_id` INT(11),
+    `group_id` INT(11),
+    `record` TEXT,
+    `time_stamp` DATETIME,
+    PRIMARY KEY (`id`)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+INSERT INTO group_record VALUES (1,1,1,'hello world 1',NOW());
+INSERT INTO group_record VALUES (2,2,1,'hello world 2',NOW());
 CREATE TABLE IF NOT EXISTS test  (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `rtd` float(11,2) NOT NULL,
-          `flag` char(1) NOT NULL,
-          `sample_factor` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-          `pool_identify` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-          `sample_time` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-          PRIMARY KEY (`id`)
- ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `rtd` float(11,2) NOT NULL,
+                                     `flag` char(1) NOT NULL,
+                                     `sample_factor` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                                     `pool_identify` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                                     `sample_time` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                                     PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 CREATE  TABLE  IF NOT EXISTS phb
 (
@@ -57,8 +83,20 @@ INSERT INTO friend_list VALUES (3,2,'xiaohong',NOW(),1);
 INSERT INTO friend_list VALUES (1,5,'xiaoli',NOW(),1);
 INSERT INTO friend_list VALUES (5,1,'xiaoming',NOW(),1);
 INSERT INTO friend_list VALUES (1,3,'xiaobai',NOW(),1);
+DROP TABLE user;
+CREATE  TABLE  IF NOT EXISTS user
+(
+    `id` INT(11) AUTO_INCREMENT,
+    `name` varchar(20),
+    `age` INT(11),
 
-DROP TABLE chat_record;
+    PRIMARY KEY (`id`)
+)ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+INSERT INTO user VALUES (1,'xiaoming',20);
+
+alter table chat_record add fulltext
+
+    DROP TABLE chat_record;
 CREATE  TABLE  IF NOT EXISTS chat_record
 (
     `id` INT(11) AUTO_INCREMENT,
