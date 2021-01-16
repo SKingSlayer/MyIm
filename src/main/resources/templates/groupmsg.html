@@ -2,6 +2,10 @@
 <div>
     <button onclick="doGroupMsg1()"></button>
 </div>
+
+<div id="div1">好友列表：</div>
+
+<div id="div2">群列表：</div>
 </html>
 <script type="text/javascript">
     var userId=1;
@@ -41,14 +45,23 @@
     }
 
     function doGroupMsg1(){
+     var ghb ="#ghb"+JSON.stringify({
+         userId:1,
+         groupId:1,
+         money:200,
+         timeStamp:dateFormat(new Date())
+     });
+
     var msg="#group#msg1"+JSON.stringify({
         userId:1,
         groupId:1,
-        record:"hello world",
+        record:ghb,
         timeStamp:dateFormat(new Date())
     })
         send(msg);
     }
+
+
     function doGroupMsg3(msg){
         var s=JSON.parse(msg);
         console.log(msg);
@@ -61,6 +74,52 @@
         send(s1)
 
     }
+
+    var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+    httpRequest.open('GET', 'http://localhost:8080/group/af?id=1&userId=2', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+    httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+    /**
+     * 获取数据后的处理程序
+     */
+    httpRequest.onreadystatechange = function () {
+        if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+            var json = httpRequest.responseText;//获取到json字符串，还需解析
+            console.log(json);
+        }
+    };
+    var httpRequest1 = new XMLHttpRequest();//第一步：建立所需的对象
+    httpRequest1.open('GET', 'http://localhost:8080/group/ag?id=1&userId=1', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+    httpRequest1.send();//第三步：发送请求  将请求参数写在URL中
+
+    /**
+     * 获取数据后的处理程序
+     */
+    httpRequest1.onreadystatechange = function () {
+        if (httpRequest1.readyState === 4 && httpRequest1.status === 200) {
+            console.log("111")
+            var json = httpRequest1.responseText;//获取到json字符串，还需解析
+            json = JSON.parse(json)
+            for (var i = 0; i < json.length; i++) {
+                var div1 = document.getElementById("div1");
+                var p = document.createElement("p");
+                p.innerText = json[i].userName + " " + json[i].umsg;
+                div1.appendChild(p)
+                var b1 = document.createElement("button");
+                b1.addEventListener("click", function () {
+                    console.log(p.innerText);
+                })
+                div1.appendChild(b1);
+
+            }
+        }
+    }
+
+function do1(){
+        httpRequest1.open('GET', 'http://localhost:8080/group/ag?id=1&userId=1', true);
+        httpRequest1.send();
+    }
+
+var init=setInterval(do1,1000)
 
     function dateFormat(time){
         var date=new Date(time);

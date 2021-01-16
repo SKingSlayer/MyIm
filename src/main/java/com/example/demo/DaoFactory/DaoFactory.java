@@ -6,13 +6,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 @Data
-public  class DaoFactory {
+@Configuration
+public class DaoFactory {
     String resource ;
     InputStream inputStream ;
     SqlSessionFactory sqlSessionFactory ;
@@ -25,6 +27,7 @@ public  class DaoFactory {
     UserDao userDao;
     MemberDao memberDao;
     GroupDao groupDao;
+
     public DaoFactory() throws IOException {
        resource = "mybatis-config.xml";
          inputStream = Resources.getResourceAsStream(resource);

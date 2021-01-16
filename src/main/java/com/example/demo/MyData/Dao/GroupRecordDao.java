@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 @Repository("GroupRecordDao")
 public interface GroupRecordDao {
-  @MyDataSource(value = DataSourceType.DB3)
+  @MyDataSource(value = DataSourceType.DB1)
    @Insert("INSERT INTO group_record (user_id,group_id,record,time_stamp) values(#{userId},#{groupId},#{record},#{timeStamp})")
    void addGroupRecord(GroupRecord groupRecord);
    @Results(id = "GRMap", value = {
@@ -24,7 +24,7 @@ public interface GroupRecordDao {
            @Result(column = "time_stamp", property = "timeStamp")
    })
 
-   @MyDataSource(value = DataSourceType.DB3)
+   @MyDataSource(value = DataSourceType.DB1)
    @Select("select * from group_record where group_id=#{groupId} and time_stamp>#{timeStamp}")
    List<GroupRecord> getGroupRecord(int groupId, Date timeStamp);
 }

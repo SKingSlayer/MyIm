@@ -25,10 +25,10 @@ public interface MemberDao {
             @Result(column = "time_stamp", property = "timeStamp")
     })
 
-    @MyDataSource(value = DataSourceType.DB3)
+    @MyDataSource(value = DataSourceType.DB1)
     @Select("select * from member where user_id=1")
     List<Member> getAllGroup(int userId);
- @MyDataSource(value = DataSourceType.DB3)
+ @MyDataSource(value = DataSourceType.DB1)
  @Results(id = "Map", value = {
          @Result(id=true, column = "user_id", property = "userId"),
          @Result(column = "group_id", property = "groupId"),
@@ -40,15 +40,15 @@ public interface MemberDao {
     @Select("select * from member where group_id=#{groupId}")
     List<Member> getAllMember(int groupId);
 
-    @MyDataSource(value = DataSourceType.DB3)
+    @MyDataSource(value = DataSourceType.DB1)
     @Update("update member set time_stamp=#{timeStamp} where user_id=#{userId} and group_id=#{groupId}")
     void updateTimeStamp(int userId, int groupId, Date timeStamp);
 
-    @MyDataSource(value = DataSourceType.DB3)
+    @MyDataSource(value = DataSourceType.DB1)
     @Update("update member set umsg=umsg+1 where user_id=#{userId} and group_id=#{groupId}")
     void updateUMSG(int userId, int groupId);
 
-    @MyDataSource(value = DataSourceType.DB3)
+    @MyDataSource(value = DataSourceType.DB1)
     @Update("update member set umsg=0 where user_id=#{userId} and group_id=#{groupId}")
     void clearUMSG(int userId, int groupId);
 }

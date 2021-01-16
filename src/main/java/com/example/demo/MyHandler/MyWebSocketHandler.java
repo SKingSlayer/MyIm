@@ -3,6 +3,7 @@ package com.example.demo.MyHandler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.DaoFactory.DaoFactory;
+import com.example.demo.MyData.Dao.GHBDao;
 import com.example.demo.MyData.Dao.GroupRecordDao;
 import com.example.demo.MyData.Dao.MemberDao;
 import com.example.demo.MyData.Entity.*;
@@ -14,6 +15,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -33,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+@Slf4j
 public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     public static ConcurrentHashMap<Integer, Channel> chm=new ConcurrentHashMap<>();
@@ -41,6 +43,8 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     GroupRecordDao groupRecordDao;
     MemberDao memberDao;
     ObjectMapper objectMapper;
+    GHBDao ghbDao;
+    DaoFactory daoFactory;
 //    @Autowired
 //    RedisTemplate<int,>
 
@@ -63,10 +67,12 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {
-        DaoFactory daoFactory=new DaoFactory();
+         daoFactory=(DaoFactory) SpringUtil.getBean("DaoFactory");
+        log.info("hello"+ daoFactory.getAliveUserDao().getAliveUser(1).getUserId());
         memberDao=(MemberDao) SpringUtil.getBean("MemberDao");
         objectMapper=new ObjectMapper();
         groupRecordDao=(GroupRecordDao) SpringUtil.getBean("GroupRecordDao");
+        ghbDao=(GHBDao) SpringUtil.getBean("GHBDao");
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         objectMapper.setDateFormat(fmt);
         //首次连接是FullHttpRequest，处理参数 by zhengkai.blog.csdn.net
@@ -233,10 +239,35 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
              if(m6.find()){
                  String tmp=msg.replaceAll("^#group","");
                  doGroupMsg(tmp,ctx);  //注意是tmp，不是msg。
+//                 doGHB(tmp,ctx);
              }
+
 
         }
         super.channelRead(ctx, message);
+    }
+    private void doGHB(String hb,ChannelHandlerContext ctx) throws JsonProcessingException {
+        Pattern p1=Pattern.compile("#ghb1");
+        Matcher m1=p1.matcher(hb);
+        if(m1.find()){
+            hb=hb.replaceAll("#ghb1","");
+            doGHB2(hb,ctx);
+        }
+    }
+    @Transactional
+    private  void doGHB2(String hb,ChannelHandlerContext ctx) throws JsonProcessingException {
+        GHB ghb1= objectMapper.readValue(hb,GHB.class);
+        int id=ghbDao.getLastId()+1;
+        GHB ghb=ghbDao.getGHB(id);
+        if(ghb==null){
+            synchronized (this){
+                ghb=ghbDao.getGHB(id);
+                if(ghb==null){
+                    ghbDao.addGHB(ghb1);
+                }
+            }
+        }
+
     }
     private void doGroupMsg(String msg,ChannelHandlerContext ctx) throws JsonProcessingException {
             Pattern p1=Pattern.compile(("#msg1")); //有#号
@@ -254,10 +285,21 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     }
     void doGroupMsg2(String msg,ChannelHandlerContext ctx) throws JsonProcessingException {
 
+        //此时msg还有#ghb直接存进record里
         GroupRecord groupRecord= objectMapper.readValue(msg, GroupRecord.class);
         int groupId=groupRecord.getGroupId();//获取群ID
         int userId=groupRecord.getUserId();
+        String record=groupRecord.getRecord();
         groupRecordDao.addGroupRecord(groupRecord);//2.存储record
+
+        Pattern p1=Pattern.compile("#ghb");
+        Matcher m1=p1.matcher(record);
+        if(m1.find()){
+            String s=record.replaceAll("#ghb","");
+            GHB ghb=objectMapper.readValue(s,GHB.class);
+            ghbDao.addGHB(ghb);
+        }
+
         List<Member> members=memberDao.getAllMember(groupId);;
         System.out.println(members.size());
         for (Member member : members) {

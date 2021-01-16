@@ -11,15 +11,14 @@ import org.springframework.stereotype.Component;
 
 public class Producer {
     DefaultMQProducer producer = new DefaultMQProducer("test-group");
-    Producer() throws MQClientException {
+    public Producer() throws MQClientException {
         producer.setNamesrvAddr("192.168.56.10:9876");
-        producer.setInstanceName("rmq-instance");
+//        producer.setInstanceName("rmq-instance");
         producer.start();
     }
     public void sendMessage(String s) throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
         Message message = new Message("rm-topic", "user-tag", s.getBytes());
         producer.send(message);
         System.out.println("生产者发送消息:" + s);
-        producer.shutdown();
     }
 }

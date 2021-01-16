@@ -2,6 +2,7 @@ package com.example.demo.MyTest.DataSourceTest;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.example.demo.DaoFactory.DaoFactory;
 import com.example.demo.zookeeper.ZKCustor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,6 +18,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,10 +30,16 @@ public class DataSourceConfig {
     public ZKCustor zkCustor(){
         return new ZKCustor();
     }
+    @Bean(name = "DaoFactory")
+    DaoFactory getDaoFactory() throws IOException {
+        DaoFactory daoFactory=new DaoFactory();
+        return  daoFactory;
+    }
 
     //数据库db1数据源
     @Bean(name = "dataSource1")
-    @ConfigurationProperties("spring.datasource.db3")
+    @ConfigurationProperties("spring.datasource.db1")
+    @Primary
     public DruidDataSource dataSource1 () {
         return DruidDataSourceBuilder.create().build();
     }
@@ -44,8 +52,7 @@ public class DataSourceConfig {
     }
 
     @Bean(name = "dataSource3")
-    @Primary
-    @ConfigurationProperties("spring.datasource.db1")
+    @ConfigurationProperties("spring.datasource.db3")
     public DruidDataSource dataSource3 () {
         return DruidDataSourceBuilder.create().build();
     }

@@ -2,10 +2,7 @@ package com.example.demo.MyConfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.ServletException;
@@ -50,13 +47,29 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        //拦截配置
 //        addInterceptor.addPathPatterns("/**");
 //    }
+@Override
+public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/cors/**").
+            allowedHeaders("*").
+            allowedMethods("*").
+            maxAge(1800).
+            allowedOrigins("*");
 
-//    private static class SecurityInterceptor extends HandlerInterceptorAdapter {
-//        @Override
-//        public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException, ServletException {
-//            HttpSession session = request.getSession();
-//            //判断是否已有该用户登录的session
+    registry.addMapping("/**").
+            allowedHeaders("*").
+            allowedMethods("*").
+            maxAge(1800).
+            allowedOrigins("http://localhost:63342");
+}
+    private static class SecurityInterceptor extends HandlerInterceptorAdapter {
+        @Override
+        public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException, ServletException {
+            HttpSession session = request.getSession();
+            System.out.println(request.getRequestURI());
+            return  true;
+            //判断是否已有该用户登录的session
 //            if(session.getAttribute("account") !=null){
+//                );
 //                return true;
 //            }
 //            //跳转到登录页
@@ -64,5 +77,7 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //            response.sendRedirect(url);
 //            return false;
 //        }
-//    }
+        }
+
+}
 }

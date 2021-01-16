@@ -11,15 +11,12 @@
     <insert id="registerUser" parameterType="com.example.demo.MyData.Entity.User">
         INSERT INTO users(user_id,money) VALUES (2,300)
     </insert>
-    <update id="addMoney">
-        UPDATE users SET money=#{param2}+money WHERE user_id=#{param1}
-    </update>
-    <update id="reduceMoney">
-        UPDATE users SET money=money-#{param2} WHERE user_id=#{param1}
-    </update>
-    <select id="getMoney" >
-        SELECT money FROM  users WHERE user_id=#{userId}
-    </select>
+<!--    <update id="addMoney">-->
+<!--        UPDATE users SET money=#{param2}+money WHERE user_id=#{param1}-->
+<!--    </update>-->
+<!--    <update id="reduceMoney">-->
+<!--        UPDATE users SET money=money-#{param2} WHERE user_id=#{param1}-->
+<!--    </update>-->
     <select id="getUser" resultType="com.example.demo.MyData.Entity.User">
         select * from  users where user_id=#{userId}
     </select>
