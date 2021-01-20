@@ -1,6 +1,6 @@
 use s1;
-DROP TABLE chat_record;
-CREATE  TABLE  IF NOT EXISTS chat_record
+DROP TABLE personal_record;
+CREATE  TABLE  IF NOT EXISTS personal_record
 (
     `id` INT(11) AUTO_INCREMENT,
     `user_id` INT(11),
@@ -9,10 +9,10 @@ CREATE  TABLE  IF NOT EXISTS chat_record
     `time_stamp` DATETIME,
     PRIMARY KEY (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
-alter table chat_record add fulltext index idx_full_keyword(record);
-INSERT INTO chat_record VALUES (1,1,2,'hello world',NOW());
-INSERT INTO chat_record VALUES (2,2,1,'hello world',NOW());
-INSERT INTO chat_record VALUES (3,2,1,'ni shi hao rn',NOW());
+alter table personal_record add fulltext index idx_full_keyword(record);
+INSERT INTO personal_record VALUES (1,1,2,'hello world',NOW());
+INSERT INTO personal_record VALUES (2,2,1,'hello world',NOW());
+INSERT INTO personal_record VALUES (3,2,1,'ni shi hao rn',NOW());
 
 CREATE  TABLE  IF NOT EXISTS group_record
 (
@@ -35,11 +35,12 @@ CREATE TABLE IF NOT EXISTS test  (
                                      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+drop table phb;
 CREATE  TABLE  IF NOT EXISTS phb
 (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `sender_id` INT(11),
-    `receiver_id` INT(11),
+    `user_id` INT(11),
+    `friend_id` INT(11),
     `money` INT(11),
     `time_stamp` DATETIME,
     PRIMARY KEY (`id`)
@@ -48,6 +49,9 @@ INSERT INTO phb VALUES (1,1,2,300,NOW());
 INSERT INTO phb VALUES (2,1,3,500,NOW());
 INSERT INTO phb VALUES (3,1,2,300,NOW());
 INSERT INTO phb VALUES (4,2,1,300,NOW());
+INSERT INTO phb VALUES (5,2,1,300,NOW());
+INSERT INTO phb VALUES (6,2,1,300,NOW());
+INSERT INTO phb VALUES (7,1,2,300,NOW());
 
 DROP TABLE ghb;
 CREATE  TABLE  IF NOT EXISTS ghb
@@ -64,6 +68,9 @@ INSERT INTO ghb VALUES (1,1,2,5000,100,NOW());
 INSERT INTO ghb VALUES (2,1,1,5000,100,NOW());
 INSERT INTO ghb VALUES (3,1,2,5000,100,NOW());
 INSERT INTO ghb VALUES (4,2,1,5000,100,NOW());
+INSERT INTO ghb VALUES (5,1,2,5000,100,NOW());
+INSERT INTO ghb VALUES (6,1,2,5000,100,NOW());
+INSERT INTO ghb VALUES (7,1,2,5000,100,NOW());
 
 DROP TABLE  user;
 CREATE  TABLE  IF NOT EXISTS  user
@@ -73,6 +80,7 @@ CREATE  TABLE  IF NOT EXISTS  user
     `password` VARCHAR(20) NOT NULL ,
     `email` VARCHAR(20) NOT NULL ,
     `money` DOUBLE,
+    UNIQUE KEY `username` (`username`),
     PRIMARY KEY (`user_id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
 INSERT INTO user VALUES (1,'xiaoming','xiaoming','706422117@qq.com',0);
@@ -83,7 +91,7 @@ INSERT INTO user VALUES (5,'xiaoqing','xiaoqing','17055642394@qq.com',600);
 INSERT INTO user VALUES (6,'xiaoli','xiaoli','18128920529@qq.com',600);
 
 
-
+drop table  friend_list;
 CREATE  TABLE  IF NOT EXISTS friend_list
 (
     `user_id` INT NOT NULL,
@@ -93,7 +101,7 @@ CREATE  TABLE  IF NOT EXISTS friend_list
     `umsg` INT NOT NULL ,
     PRIMARY KEY (user_id,friend_id)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
-# INSERT INTO friend_list VALUES (1,2,'xiaohong',NOW(),1);
+INSERT INTO friend_list VALUES (1,2,'xiaohong',NOW(),1);
 INSERT INTO friend_list VALUES (2,1,'xiaoming',NOW(),1);
 INSERT INTO friend_list VALUES (2,3,'xiaobai',NOW(),1);
 INSERT INTO friend_list VALUES (3,2,'xiaohong',NOW(),1);
@@ -125,6 +133,7 @@ CREATE  TABLE  IF NOT EXISTS group_record
     `time_stamp` DATETIME,
     PRIMARY KEY (`id`)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+alter table s1.group_record add fulltext index idx_full_keyword(record);
 INSERT INTO group_record VALUES (1,1,1,'hello world 1',NOW());
 INSERT INTO group_record VALUES (2,2,1,'hello world 2',NOW());
 
@@ -173,10 +182,13 @@ create table fulltext_test (
 DROP TABLE alive_user;
 CREATE  TABLE  IF NOT EXISTS alive_user
 (
-    `user_id` INT(11) AUTO_INCREMENT,
-    `last_talk_time` DATETIME,
+
+    `user_id` INT(11),
+    `time_stamp` DATETIME,
     PRIMARY KEY (user_id)
 )ENGINE=InnoDb  DEFAULT CHARSET=utf8;
+
+
 
 CREATE TABLE fts_a (
                        FTS_DOC_ID BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,

@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         String subject = "jihuo";
         //user/checkCode?code=code(激活码)是我们点击邮件链接之后根据激活码查询用户，如果存在说明一致，将用户状态修改为“1”激活
         //上面的激活码发送到用户注册邮箱
-        String context = "<a href=\"http://localhost:8081/checkcode?code="+code+"\">激活请点击:"+code+"</a>";
+        String context = "<a href=\"http://localhost:8080/user/checkcode?code="+code+"\">激活请点击:"+code+"</a>";
         //发送激活邮件
         mailService.sendHtmlMail (user.getEmail(),subject,context);
     }

@@ -15,7 +15,6 @@ public class PHBTest {
             DaoFactory daoFactory=new DaoFactory();
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
           System.out.println(daoFactory.getPhbDao().getLastId());
-            daoFactory.getPhbDao().deletePHB(20);
             daoFactory.getSqlSession().commit();
         }
 

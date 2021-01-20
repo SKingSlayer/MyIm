@@ -1,8 +1,8 @@
 package com.example.demo.MyData.Dao;
 
 import com.example.demo.MyData.Entity.Member;
-import com.example.demo.MyTest.DataSourceTest.DataSourceType;
-import com.example.demo.MyTest.DataSourceTest.MyDataSource;
+import com.example.demo.MyData.Config.DataSourceType;
+import com.example.demo.MyData.Config.MyDataSource;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -29,14 +29,7 @@ public interface MemberDao {
     @Select("select * from member where user_id=1")
     List<Member> getAllGroup(int userId);
  @MyDataSource(value = DataSourceType.DB1)
- @Results(id = "Map", value = {
-         @Result(id=true, column = "user_id", property = "userId"),
-         @Result(column = "group_id", property = "groupId"),
-         @Result(column = "user_name", property = "userName"),
-         @Result(column = "group_name", property = "groupName"),
-         @Result(column = "umsg", property = "umsg"),
-         @Result(column = "time_stamp", property = "timeStamp")
- })
+@ResultMap(value = "memberMap")
     @Select("select * from member where group_id=#{groupId}")
     List<Member> getAllMember(int groupId);
 

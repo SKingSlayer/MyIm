@@ -7,5 +7,5 @@ import java.util.Date;
 @Data
 public class AliveUser {
     int userId;
-    Date lastTalkTime;
+    Date timeStamp;
 }

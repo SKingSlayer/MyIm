@@ -40,8 +40,5 @@ public class AsyncTaskConfig implements AsyncConfigurer {
         return threadPool;
     }
 
-    @Override
-    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return null;
-    }
+
 }

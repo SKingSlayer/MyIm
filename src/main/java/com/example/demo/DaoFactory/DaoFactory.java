@@ -20,24 +20,18 @@ public class DaoFactory {
     SqlSessionFactory sqlSessionFactory ;
     SqlSession sqlSession ;
     FriendDao friendDao;
-    TalkMessageDao talkMessageDao;
-    AliveUserDao aliveUserDao;
     PHBDao phbDao;
-    ChatRecordDao chatRecordDao;
     UserDao userDao;
     MemberDao memberDao;
     GroupDao groupDao;
-
     public DaoFactory() throws IOException {
        resource = "mybatis-config.xml";
          inputStream = Resources.getResourceAsStream(resource);
          sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         sqlSession = sqlSessionFactory.openSession();
          friendDao = sqlSession.getMapper(FriendDao.class);
-         talkMessageDao=sqlSession.getMapper(TalkMessageDao.class);
-         aliveUserDao=sqlSession.getMapper(AliveUserDao.class);
+//         aliveUserDao=sqlSession.getMapper(AliveUserDao.class);
         phbDao=sqlSession.getMapper(PHBDao.class);
-        chatRecordDao=sqlSession.getMapper(ChatRecordDao.class);
         userDao=sqlSession.getMapper(UserDao.class);
         groupDao=sqlSession.getMapper(GroupDao.class);
     }

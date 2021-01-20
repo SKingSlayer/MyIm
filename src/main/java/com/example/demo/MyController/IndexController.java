@@ -22,8 +22,7 @@ import java.util.List;
 
 @Controller
 public class IndexController {
-    @Autowired
-    UserServiceImpl userServiceImpl;
+
     @Autowired
     GroupDao groupDao;
     @Autowired
@@ -41,11 +40,7 @@ public class IndexController {
 
         return "index";
     }
-    @GetMapping("/login")
-    public String MyLogin(){
 
-        return "login";
-    }
 
     @GetMapping("/index")
     public String index(){
@@ -58,36 +53,10 @@ public class IndexController {
         model.addAttribute("username","lihuan");
         return "socket";
     }
-    @GetMapping("/xiaohong")
-    public String xiaoong(Model model){
-        model.addAttribute("userId","2");
-        model.addAttribute("username","xiaohong");
-        return "xiaohong";
-    }
-    @ResponseBody
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@RequestParam("username")String username,@RequestParam("userId") String userId
-    ,@RequestParam("password") String password ,@RequestParam("email") String email){
-        String code = UUIDUtils.getUUID()+ UUIDUtils.getUUID();
-        TmpUser user=new TmpUser();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setCode(code);
-        user.setUserId(Integer.parseInt(userId));
-        userServiceImpl.register(user);
-        System.out.println(username);
-        return "having send";
-    }
 
-    @ResponseBody
-    @GetMapping("/checkcode")
-    public String checkCode(@RequestParam("code") String code){
-        TmpUser user= userServiceImpl.checkCode(code);
-        System.out.println("test");
-        System.out.println(user.getEmail());
-        return "激活成功";
-    }
+
+
+
 
 
 

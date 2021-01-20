@@ -1,10 +1,8 @@
 package com.example.demo.RocketMq;
 
 import com.example.demo.MyData.Dao.GHBDao;
-import com.example.demo.MyData.Dao.RmDao;
 import com.example.demo.MyData.Dao.UserDao;
 import com.example.demo.MyData.Entity.GHB;
-import com.example.demo.MyData.JsonObject.RmTmp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -65,21 +63,36 @@ public class MyConsumer1 {
                 int rmNum;
                 for (MessageExt msg : msgs) {
                     GHB ghb= objectMapper.readValue(new String(msg.getBody()), GHB.class);
-
-                    double num=ghb.getMoney();
-
+                    Random r  = new Random();
+                    double min   = 0.01; //
                     synchronized(this){
-                        double currentMoney=ghbDao.getMoney(ghb.getId());
-                        if(currentMoney>=num)
-                        {
-                            ghbDao.subMoney1(ghb.getId(),currentMoney,num);
-                            userDao.addMoney(ghb.getUserId(),num);
-                            log.info("hello");
-                            log.info(String.valueOf("user  "+userDao.getMoney(1)));
-                            log.info(String.valueOf("ghb   "+ ghbDao.getMoney(ghb.getId())));
+                        GHB ghb1=ghbDao.getGHB(ghb.getId());
+                        double currentMoney=ghb1.getMoney();
+                        int size=ghb1.getSize();
+                        log.info(String.valueOf(size));
+                        if(size==1){
+                            ghbDao.subMoney1(ghb1.getId(),currentMoney,currentMoney);
+                            userDao.addMoney(ghb1.getUserId(),currentMoney);
+                            ghbDao.setSize(ghb1.getId());
+                        }
+                        else{
+                            double max=(ghb1.getMoney()/ ghb1.getSize()) *2;
+                            double money = r.nextDouble() * max;
+                            money = money <= min ? 0.01: money;
+                            money = Math.floor(money * 100) / 100;
+                            if(currentMoney>=money)
+                            {
+                                ghbDao.setSize(ghb1.getId());
+                                ghbDao.subMoney1(ghb1.getId(),currentMoney,money);
+                                userDao.addMoney(ghb1.getUserId(),money);
+                                log.info(String.valueOf("user  "+userDao.getMoney(1)));
+                                log.info(String.valueOf("ghb   "+ ghb1.getMoney()));
+
+                            }
+                        }
 
                         }
-                    }
+
 
 
                 }

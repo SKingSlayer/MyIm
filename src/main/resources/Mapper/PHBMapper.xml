@@ -17,17 +17,17 @@
         <result column="money" property="money"/>
         <result column="time_stamp" property="timeStamp"/>
     </resultMap>
-    <select id="getPHB" resultMap="PHBMap">
-        select * from  phb where id=#{param1}
-</select>
-    <insert id="addPHB"  parameterType="com.example.demo.MyData.Entity.PHB">
-        INSERT INTO phb (sender_id,receiver_id,money,time_stamp) VALUES (#{senderId},#{receiverId},#{money},#{timeStamp})
-</insert>
-    <select id="getLastId"  resultType="int" >
-        select max(id) from phb
-</select>
-    <delete id="deletePHB">
-        DELETE FROM phb where id=#{id}
-</delete>
+<!--    <select id="getPHB" resultMap="PHBMap">-->
+<!--        select * from  phb where id=#{param1}-->
+<!--</select>-->
+<!--    <insert id="addPHB"  parameterType="com.example.demo.MyData.Entity.PHB">-->
+<!--        INSERT INTO phb (sender_id,receiver_id,money,time_stamp) VALUES (#{senderId},#{receiverId},#{money},#{timeStamp})-->
+<!--</insert>-->
+<!--    <select id="getLastId"  resultType="int" >-->
+<!--        select max(id) from phb-->
+<!--</select>-->
+<!--    <delete id="deletePHB">-->
+<!--        DELETE FROM phb where id=#{id}-->
+<!--</delete>-->
 
 </mapper>

@@ -1,4 +1,4 @@
-package com.example.demo.MyTest.DataSourceTest;
+package com.example.demo.MyData.Config;
 
 public enum DataSourceType {
     DB1,

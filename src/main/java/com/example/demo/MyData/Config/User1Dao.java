@@ -1,4 +1,4 @@
-package com.example.demo.MyTest.DataSourceTest;
+package com.example.demo.MyData.Config;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

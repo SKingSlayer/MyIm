@@ -1,4 +1,4 @@
-package com.example.demo.MyTest.DataSourceTest;
+package com.example.demo.MyData.Config;
 
 public class DataSourceContextHolder {
     // 存放当前线程使用的数据源类型

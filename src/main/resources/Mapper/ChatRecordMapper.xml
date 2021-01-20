@@ -1,28 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!--namespace绑定一个dao接口-->
-<mapper namespace="com.example.demo.MyData.Dao.ChatRecordDao">
-    <resultMap type="com.example.demo.MyData.Entity.ChatRecord" id="RecordMap">
-        <!-- 指定主键列的封装规则
-            id定义主键会底层有优化
-            column:指定哪一列
-            property:指定对应的javaBean属性
-        -->
-        <id column="id" property="id"/>
-        <!-- 定义普通列封装规则 -->
-        <result column="friend_id" property="friendId"/>
-        <result column="user_id" property="userId"/>
-        <result column="record" property="record"/>
-        <!-- 其他不指定的列会自动封装,推荐:只要写resultMap,就要把全部的映射规则都写上-->
-        <result column="time_stamp" property="timeStamp"/>
-    </resultMap>
-    <select id="getRecord" resultMap="RecordMap">   <!-- 是resultMap不是resulttype -->
-        SELECT *  FROM  chat_record WHERE (user_id=#{param1} and friend_id=#{param2} or user_id=#{param2} and friend_id=#{param1}) and time_stamp>#{param3}
-    </select>
-    <insert id="addRecord" parameterType="com.example.demo.MyData.Entity.ChatRecord">
-        INSERT INTO chat_record (user_id,friend_id,record,time_stamp) VALUES  (#{userId},#{friendId},#{record},#{timeStamp})
-    </insert>
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<!DOCTYPE mapper-->
+<!--        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--&lt;!&ndash;namespace绑定一个dao接口&ndash;&gt;-->
+<!--<mapper namespace="com.example.demo.MyData.Dao.ChatRecordDao">-->
+<!--    <resultMap type="com.example.demo.MyData.Entity.ChatRecord" id="RecordMap">-->
+<!--        &lt;!&ndash; 指定主键列的封装规则-->
+<!--            id定义主键会底层有优化-->
+<!--            column:指定哪一列-->
+<!--            property:指定对应的javaBean属性-->
+<!--        &ndash;&gt;-->
+<!--        <id column="id" property="id"/>-->
+<!--        &lt;!&ndash; 定义普通列封装规则 &ndash;&gt;-->
+<!--        <result column="friend_id" property="friendId"/>-->
+<!--        <result column="user_id" property="userId"/>-->
+<!--        <result column="record" property="record"/>-->
+<!--        &lt;!&ndash; 其他不指定的列会自动封装,推荐:只要写resultMap,就要把全部的映射规则都写上&ndash;&gt;-->
+<!--        <result column="time_stamp" property="timeStamp"/>-->
+<!--    </resultMap>-->
+<!--    <select id="getRecord" resultMap="RecordMap">   &lt;!&ndash; 是resultMap不是resulttype &ndash;&gt;-->
+<!--        SELECT *  FROM  chat_record WHERE (user_id=#{param1} and friend_id=#{param2} or user_id=#{param2} and friend_id=#{param1}) and time_stamp>#{param3}-->
+<!--    </select>-->
+<!--    <insert id="addRecord" parameterType="com.example.demo.MyData.Entity.ChatRecord">-->
+<!--        INSERT INTO chat_record (user_id,friend_id,record,time_stamp) VALUES  (#{userId},#{friendId},#{record},#{timeStamp})-->
+<!--    </insert>-->
 
-</mapper>
+<!--</mapper>-->

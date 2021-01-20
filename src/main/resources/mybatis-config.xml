@@ -20,9 +20,8 @@
         <mapper resource="Mapper/User.xml"/>
         <mapper resource="Mapper/FriendMapper.xml"/>
         <mapper resource="Mapper/TalkMessageMapper.xml"/>
-        <mapper resource="Mapper/AliveUserMapper.xml"/>
+<!--        <mapper resource="Mapper/AliveUserMapper.xml"/>-->
         <mapper resource="Mapper/PHBMapper.xml"/>
-        <mapper resource="Mapper/ChatRecordMapper.xml"/>
         <mapper resource="Mapper/GroupMapper.xml"/>
     </mappers>
 

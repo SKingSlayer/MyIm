@@ -2,9 +2,8 @@ package com.example.demo.MyController;
 
 import com.example.demo.DaoFactory.DaoFactory;
 import com.example.demo.MyConfig.SwaggerConfig;
-import com.example.demo.MyData.Dao.GHBDao;
-import com.example.demo.MyData.Dao.MemberDao;
-import com.example.demo.MyData.Dao.UserDao;
+import com.example.demo.MyData.Dao.*;
+import com.example.demo.MyData.Entity.AliveUser;
 import com.example.demo.MyData.Entity.GHB;
 import com.example.demo.RocketMq.Demo.Producer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,10 +18,14 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
+
+import static com.example.demo.MyHandler.MyWebSocketHandler.chm;
 
 @Api(value = "/group",tags = {SwaggerConfig.TAG_1})
 @Controller
@@ -46,11 +49,15 @@ public class GroupController {
     @Autowired
     UserDao userDao;
     ObjectMapper objectMapper=new ObjectMapper();
+    @Autowired
+    AliveUserDao aliveUserDao;
+    @Autowired
+    FriendDao friendDao;
 
     public GroupController() throws MQClientException {
 
     }
-
+@ApiOperation("获得群组列表")
     @ResponseBody
     @GetMapping("ag")
     public String getAllGroup(@RequestParam("userId") int userId) throws IOException {
@@ -59,14 +66,20 @@ public class GroupController {
         return objectMapper.writeValueAsString(memberDao.getAllGroup(userId));
     }
     @ResponseBody
+    @ApiOperation("获得朋友列表")
     @GetMapping("af")
     public String getAllFriend(@RequestParam("userId") int userId) throws IOException {
         DaoFactory daoFactory=new DaoFactory();
         ObjectMapper objectMapper=new ObjectMapper();
-        daoFactory.getFriendDao().getFriendList(userId);
-        return objectMapper.writeValueAsString(daoFactory.getFriendDao().getFriendList(userId));
+            if(aliveUserDao.getAliveUserById(userId)==null)
+            {
+                aliveUserDao.addAliveUser(userId,new Date());
+            }
+        else
+        aliveUserDao.upDateAliveUser(userId,new Date());
+        return objectMapper.writeValueAsString(friendDao.getFriendList(userId));
     }
-    @ApiOperation(value = "/grabghb", tags = {"grab red envelopes"},response =String.class)
+    @ApiOperation(value = "抢红包接口", tags = {"grab red envelopes"},response =String.class)
     @ResponseBody
     @GetMapping("grabghb")
     public  String grabGHB(@RequestParam("id") @ApiParam(value = "id of grab red envelopes" ,required = true) int id, @RequestParam("userId") @ApiParam(value = "id of receiver" ,required = true) int userId){
@@ -110,8 +123,14 @@ public class GroupController {
         return "groupmsg";
     }
     @GetMapping("test4")
-    String test4(@RequestParam("id") int id, @RequestParam("userId")int userId) throws MQClientException, InterruptedException, RemotingException, MQBrokerException, IOException {
+    String test4(@RequestParam("userId")int userId, Model model) throws MQClientException, InterruptedException, RemotingException, MQBrokerException, IOException {
+        model.addAttribute("userId","2");
+        model.addAttribute("username","xiaohong");
         return "groupmsg";
+    }
+    @GetMapping("test5")
+    String test5(@RequestParam("id") int id, @RequestParam("userId")int userId) throws MQClientException, InterruptedException, RemotingException, MQBrokerException, IOException {
+        return "xiaohong";
     }
 
 

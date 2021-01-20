@@ -1,9 +1,9 @@
 package com.example.demo.MyData.Dao;
 
 import com.example.demo.MyData.Entity.GroupRecord;
-import com.example.demo.MyTest.DataSourceTest.DataSourceType;
-import com.example.demo.MyTest.DataSourceTest.MyDataSource;
-import lombok.Data;
+import com.example.demo.MyData.Entity.PersonalRecord;
+import com.example.demo.MyData.Config.DataSourceType;
+import com.example.demo.MyData.Config.MyDataSource;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -18,8 +18,8 @@ public interface GroupRecordDao {
    void addGroupRecord(GroupRecord groupRecord);
    @Results(id = "GRMap", value = {
            @Result(id=true, column = "id", property = "id"),
-           @Result(id=true, column = "user_id", property = "userId"),
-           @Result(id=true, column = "group_id", property = "groupId"),
+           @Result(column = "user_id", property = "userId"),
+           @Result(column = "group_id", property = "groupId"),
            @Result(column = "record", property = "record"),
            @Result(column = "time_stamp", property = "timeStamp")
    })
@@ -27,4 +27,8 @@ public interface GroupRecordDao {
    @MyDataSource(value = DataSourceType.DB1)
    @Select("select * from group_record where group_id=#{groupId} and time_stamp>#{timeStamp}")
    List<GroupRecord> getGroupRecord(int groupId, Date timeStamp);
+
+ @MyDataSource(value = DataSourceType.DB1)
+ @Select("select * from group_record where match(record) against(CONCAT('%',#{s},'%'))")
+ List<PersonalRecord> getRecordByFullIndex(String s);
 }

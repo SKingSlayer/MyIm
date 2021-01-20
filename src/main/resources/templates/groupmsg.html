@@ -1,15 +1,35 @@
 <html>
 <div>
-    <button onclick="doGroupMsg1()"></button>
+    <button onclick="sendGHB()"></button>
+    <button onclick="sendPHB()"></button>
 </div>
 
 <div id="div1">好友列表：</div>
 
 <div id="div2">群列表：</div>
+
+<div contenteditable="true"></div>
+<div >
+    <div class="cont" id="div3">
+        <p>在吗</p>
+        <p>你好</p>
+    </div>
+    <form>
+        <textarea id="txt" ></textarea>
+        <input type="button" id="btn" value="发送" onclick=sendMsg()>
+        <input type="button" id="hbtn" value="发红包" onclick=sendPHB()>
+    </form>
+</div>
+<div>
+    <textarea id="chat" style="width: 1024px;height: 300px;"></textarea>
+</div>
 </html>
 <script type="text/javascript">
     var userId=1;
     var groupId=1;
+    var userName="xiaoming"
+    var friendId=2;
+    var flag=1;
     window.onload=function (){
         console.log("hello")
     }
@@ -17,122 +37,283 @@
     if(window.WebSocket){
         socket = new WebSocket("ws://127.0.0.1:12345/ws");
         socket.onopen=function (){
-            register()
+           MyRegister();
         }
         socket.onmessage=function (event){
              doGroupMsg(event.data.toString());
+             doPersonalMsg(event.data.toString());
+             console.log(event.data.toString())
         }
     }
     function send(message){
         if(!window.WebSocket){return;}
         socket.send(message);
     }
-   function  doGroupMsg(msg) {
-       let reg = new RegExp("#group", 'g');
-       if (reg.test(msg)) {
-           msg = msg.replace(reg, "")
-           let reg3 = new RegExp("#msg2", 'g');
-           if (reg3.test(msg)) {
-               msg = msg.replace(reg3, "")
-               doGroupMsg3(msg);
-           }
-       }
-   }
-    function register(){
-        let  userId=1;
-        let msg="#init"+userId;
-        send(msg);
-    }
-
-    function doGroupMsg1(){
-     var ghb ="#ghb"+JSON.stringify({
-         userId:1,
-         groupId:1,
-         money:200,
-         timeStamp:dateFormat(new Date())
-     });
-
-    var msg="#group#msg1"+JSON.stringify({
-        userId:1,
-        groupId:1,
-        record:ghb,
-        timeStamp:dateFormat(new Date())
-    })
-        send(msg);
-    }
-
-
-    function doGroupMsg3(msg){
-        var s=JSON.parse(msg);
-        console.log(msg);
-        var s1="#group#msg3"+JSON.stringify({
-            userId:1,
-            groupId:1,
-            record:"",
-            timeStamp:dateFormat(new Date())
-        })
-        send(s1)
-
-    }
-
-    var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
-    httpRequest.open('GET', 'http://localhost:8080/group/af?id=1&userId=2', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
-    httpRequest.send();//第三步：发送请求  将请求参数写在URL中
-    /**
-     * 获取数据后的处理程序
-     */
-    httpRequest.onreadystatechange = function () {
-        if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-            var json = httpRequest.responseText;//获取到json字符串，还需解析
-            console.log(json);
+    function sendMsg(){
+        var txt=document.getElementById("txt");
+        if(flag===1){
+            var msg=txt.value;
+            doPersonalMsg1(msg)
+            txt.value="";
         }
-    };
-    var httpRequest1 = new XMLHttpRequest();//第一步：建立所需的对象
-    httpRequest1.open('GET', 'http://localhost:8080/group/ag?id=1&userId=1', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
-    httpRequest1.send();//第三步：发送请求  将请求参数写在URL中
 
-    /**
-     * 获取数据后的处理程序
-     */
-    httpRequest1.onreadystatechange = function () {
-        if (httpRequest1.readyState === 4 && httpRequest1.status === 200) {
-            console.log("111")
-            var json = httpRequest1.responseText;//获取到json字符串，还需解析
-            json = JSON.parse(json)
-            for (var i = 0; i < json.length; i++) {
-                var div1 = document.getElementById("div1");
-                var p = document.createElement("p");
-                p.innerText = json[i].userName + " " + json[i].umsg;
-                div1.appendChild(p)
-                var b1 = document.createElement("button");
-                b1.addEventListener("click", function () {
-                    console.log(p.innerText);
-                })
-                div1.appendChild(b1);
-
+    }
+    function doPersonalMsg(msg) {
+        let reg = new RegExp("#personal", 'g');
+        if (reg.test(msg)) {
+            msg = msg.replace(reg, "")
+            let reg3 = new RegExp("#msg2", 'g');
+            if (reg3.test(msg)) {
+                msg = msg.replace(reg3, "")
+                doPersonalMsg3(msg);
             }
         }
     }
 
-function do1(){
-        httpRequest1.open('GET', 'http://localhost:8080/group/ag?id=1&userId=1', true);
+        function doPersonalMsg1(msg) {
+            var s = "#personal#msg1" + JSON.stringify({
+                userId: userId,
+                friendId: friendId,
+                record: msg,
+                timeStamp: dateFormat(new Date())
+
+            })
+            send(s);
+        }
+
+        function doPersonalMsg3(msg) {
+            var o1 = JSON.parse(msg);
+            var s=o1.record;
+            var div3 = document.getElementById("div3");
+            let reg = new RegExp("#phb");
+            if (reg.test(s)) {
+                s=s.replaceAll("#phb", "");
+                console.log(s);
+                var o2 = JSON.parse(s);
+                var b1=document.createElement("button");
+                b1.tag=o2;
+                b1.addEventListener("click", function (){
+                    var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+                    console.log(this.tag.friendId===userId);
+
+                    httpRequest.open('GET', 'http://localhost:8080/user/phb/grab?id='+this.tag.id+ '&userId='+this.tag.friendId, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+                    httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+                    /**
+                     * 获取数据后的处理程序
+                     */
+                    httpRequest.onreadystatechange = function () {
+                        if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                            var json = httpRequest.responseText;//获取到json字符串，还需解析
+                            var reg=RegExp("#success")
+                            if(reg.test(json)){
+                                json=json.replaceAll("#success","");
+                            }
+                        json=JSON.parse(json);
+                            doPersonalMsg1(json.userName+"抢到了红包")
+                        }
+                    };
+                });
+                div3.appendChild(b1)
+
+            }
+            else{
+                var p = document.createElement("p");
+                p.innerText = userName + " " + o1.record;
+                div3.appendChild(p);
+            }
+
+
+
+            var s = "#personal#msg3" + JSON.stringify({
+                userId: userId,
+                friendId: friendId,
+                record: 0,
+                timeStamp: dateFormat(new Date())
+
+            })
+            send(s);
+
+
+
+        }
+
+
+        function doGroupMsg(msg) {
+            let reg = new RegExp("#group", 'g');
+            if (reg.test(msg)) {
+                msg = msg.replace(reg, "")
+                let reg3 = new RegExp("#msg2", 'g');
+                if (reg3.test(msg)) {
+                    msg = msg.replace(reg3, "")
+                    doGroupMsg3(msg);
+                }
+            }
+        }
+
+        function MyRegister() {
+            let msg = "#init" + userId;
+            send(msg);
+            console.log("hello world")
+        }
+
+        function doGroupMsg1(msg) {
+
+            var s = "#group#msg1" + JSON.stringify({
+                userId: 1,
+                groupId: 1,
+                record: ghb,
+                timeStamp: dateFormat(new Date())
+            })
+            send(s);
+        }
+
+        function sendPHB() {
+            console.log("hhhhhhhh")
+            var phb = "#phb" + JSON.stringify({
+                userId: userId,
+                friendId: friendId,
+                money: 100,
+                timeStamp: dateFormat(new Date())
+            });
+
+            var msg = "#personal#msg1" + JSON.stringify({
+                userId: userId,
+                friendId: friendId,
+                record: phb,
+                timeStamp: dateFormat(new Date())
+            })
+            send(msg);
+        }
+
+        function sendGHB() {
+            var ghb = "#ghb" + JSON.stringify({
+                userId: 1,
+                groupId: 1,
+                size: 100,
+                money: 23,
+                timeStamp: dateFormat(new Date())
+            });
+
+            var msg = "#group#msg1" + JSON.stringify({
+                userId: 1,
+                groupId: 1,
+                record: ghb,
+                timeStamp: dateFormat(new Date())
+            })
+            send(msg);
+        }
+
+
+        function doGroupMsg3(msg) {
+            var s = JSON.parse(msg);
+            console.log(msg);
+            var s1 = "#group#msg3" + JSON.stringify({
+                userId: 1,
+                groupId: 1,
+                record: "",
+                timeStamp: dateFormat(new Date())
+            })
+            send(s1)
+
+        }
+
+        var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+        httpRequest.open('GET', 'http://localhost:8080/group/af?id=1&userId=2', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+        httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+        /**
+         * 获取数据后的处理程序
+         */
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+                var json = httpRequest.responseText;//获取到json字符串，还需解析
+                console.log(json);
+            }
+        };
+        var httpRequest1 = new XMLHttpRequest();//第一步：建立所需的对象
+        httpRequest1.open('GET', 'http://localhost:8080/group/af?userId=1', true);
         httpRequest1.send();
+
+        function do1() {
+            httpRequest1.open('GET', 'http://localhost:8080/group/af?userId=1', true);
+            httpRequest1.send();
+        }
+
+        httpRequest1.onreadystatechange = function () {
+            if (httpRequest1.readyState === 4 && httpRequest1.status === 200) {
+                var json = httpRequest1.responseText;//获取到json字符串，还需解析
+                json = JSON.parse(json)
+                var div1 = document.getElementById("div1");
+                div1.innerHTML = ""
+                div1.innerText = "好友列表"
+
+                for (var i = 0; i < json.length; i++) {
+                    var p = document.createElement("p");
+                    p.innerText = json[i].friendName + " " + json[i].umsg;
+                    div1.appendChild(p)
+                    var b1 = document.createElement("button");
+                    b1.tag = json[i];
+                    b1.addEventListener("click", function () {
+                        console.log(this.tag.friendName)
+                        createPersonalChatUi(this.tag)
+                        flag = 1;
+                        friendId = this.tag.friendId;
+                    })
+                    div1.appendChild(b1);
+
+                }
+            }
+        }
+
+
+        var init1 = setInterval(do1, 2000)
+    var httpRequest2 = new XMLHttpRequest();//第一步：建立所需的对象
+    httpRequest2.open('GET', 'http://localhost:8080/group/ag?userId=1', true);
+    httpRequest2.send();
+    function do2() {
+        httpRequest2.open('GET', 'http://localhost:8080/group/ag?userId=1', true);
+        httpRequest2.send();
     }
 
-var init=setInterval(do1,1000)
+    httpRequest2.onreadystatechange = function () {
+        if (httpRequest2.readyState === 4 && httpRequest2.status === 200) {
+            var json = httpRequest2.responseText;//获取到json字符串，还需解析
+            json = JSON.parse(json)
+            var div2 = document.getElementById("div1");
+            div2.innerHTML = ""
+            div2.innerText = "好友列表"
+            div1.appendChild(b1);
 
-    function dateFormat(time){
-        var date=new Date(time);
-        var year=date.getFullYear();
-        /* 在日期格式中，月份是从0开始的，因此要加0
+
+        }
+    }
+    var init2=setInterval(do2, 2000)
+
+
+        function createGroupChatUi() {
+
+        }
+
+        function createPersonalChatUi(json) {
+            var div3 = document.getElementById("div3");
+            var p1 = document.createElement("p");
+            p1.innerText = json.friendName + "     " + userName;
+            div3.appendChild(p1);
+
+        }
+
+        function dateFormat(time) {
+            var date = new Date(time);
+            var year = date.getFullYear();
+            /* 在日期格式中，月份是从0开始的，因此要加0
          * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
          * */
-        var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
-        var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
-        var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
-        var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
-        var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
-        // 拼接
-        return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
-    }
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            // 拼接
+            return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+        }
+
 </script>

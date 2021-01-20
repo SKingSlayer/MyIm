@@ -8,6 +8,8 @@ public class User {
     public int userId;
     public  double money;
     public String username;
-    public String userEmail;
+    public String email;
+    public String password;
+
 
 }

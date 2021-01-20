@@ -8,16 +8,16 @@
     <select id="getUserList" resultType="com.example.demo.MyData.Entity.User">
         select * from  users
     </select>
-    <insert id="registerUser" parameterType="com.example.demo.MyData.Entity.User">
-        INSERT INTO users(user_id,money) VALUES (2,300)
-    </insert>
+<!--    <insert id="registerUser" parameterType="com.example.demo.MyData.Entity.User">-->
+<!--        INSERT INTO users(user_id,money) VALUES (2,300)-->
+<!--    </insert>-->
 <!--    <update id="addMoney">-->
 <!--        UPDATE users SET money=#{param2}+money WHERE user_id=#{param1}-->
 <!--    </update>-->
 <!--    <update id="reduceMoney">-->
 <!--        UPDATE users SET money=money-#{param2} WHERE user_id=#{param1}-->
 <!--    </update>-->
-    <select id="getUser" resultType="com.example.demo.MyData.Entity.User">
-        select * from  users where user_id=#{userId}
-    </select>
+<!--    <select id="getUser" resultType="com.example.demo.MyData.Entity.User">-->
+<!--        select * from  users where user_id=#{userId}-->
+<!--    </select>-->
 </mapper>

@@ -36,17 +36,18 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
             "classpath:/META-INF/resources/webjars/");
     WebMvcConfigurer.super.addResourceHandlers(registry);
 }
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry){
-////        InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
-//        //排除配置
-//        addInterceptor.excludePathPatterns("/login");
-//        addInterceptor.excludePathPatterns("/js/**");
-//        addInterceptor.excludePathPatterns("/css/**");
-//
-//        //拦截配置
-//        addInterceptor.addPathPatterns("/**");
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        InterceptorRegistration addInterceptor = registry.addInterceptor(new SecurityInterceptor());
+        //排除配置
+        addInterceptor.excludePathPatterns("/login");
+        addInterceptor.excludePathPatterns("/index");
+        addInterceptor.excludePathPatterns("/js/**");
+        addInterceptor.excludePathPatterns("/css/**");
+
+        //拦截配置
+        addInterceptor.addPathPatterns("/**");
+    }
 @Override
 public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/cors/**").
@@ -59,25 +60,18 @@ public void addCorsMappings(CorsRegistry registry) {
             allowedHeaders("*").
             allowedMethods("*").
             maxAge(1800).
-            allowedOrigins("http://localhost:63342");
+            allowedOrigins("*");
 }
     private static class SecurityInterceptor extends HandlerInterceptorAdapter {
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException, ServletException {
             HttpSession session = request.getSession();
             System.out.println(request.getRequestURI());
-            return  true;
-            //判断是否已有该用户登录的session
-//            if(session.getAttribute("account") !=null){
-//                );
-//                return true;
-//            }
-//            //跳转到登录页
-//            String url = "/login";
-//            response.sendRedirect(url);
-//            return false;
-//        }
+            return true;
+
         }
+
+
 
 }
 }
